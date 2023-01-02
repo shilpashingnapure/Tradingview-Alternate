@@ -3,6 +3,8 @@ import './App.css';
 import React, { useState , useEffect}  from 'react';
 import { ChartStock, StockChart } from './Components/ChartStock';
 import raw from './ACC.txt'
+import { HorizontalNav } from './Components/HorizontalNav';
+import { VerticalNav } from './Components/verticalNav';
 
 
 function App() {
@@ -50,8 +52,14 @@ function App() {
   return (
     <div className="App">
 
+        <HorizontalNav />
+
+        <div className='main_container'>
+          <VerticalNav/>
+          <StockChart initialData={initialData} name={name}/>
+        </div>
         {/* <ChartStock initialData={initialData}/> */}
-        <StockChart initialData={initialData} name={name}/>
+
 
 
     </div>

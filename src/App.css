@@ -1,4 +1,8 @@
-.chart{
-    padding:20px 50px;
-    margin: 10px;
+
+
+.main_container{
+    width: 100%;
+    display: flex;
+    height: fit-content;
+    background-color: #edf2ff;
 }
