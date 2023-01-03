@@ -1,14 +1,17 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import icon from '../image/downArrow.svg'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
 import { IconButton } from '@mui/material';
+import './navbar.css'
+import { useDispatch } from 'react-redux';
+import { handleChartType } from '../REDUX/action';
 
 
-export const PositionedMenu = () => {
+
+export const SubMenu = ({list , type}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -17,6 +20,11 @@ export const PositionedMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const dispatch = useDispatch()
+  function handleChart(value){
+    dispatch(handleChartType(value))
+  }
 
   return (
     <div>
@@ -40,10 +48,28 @@ export const PositionedMenu = () => {
         MenuListProps={{
           'aria-labelledby': 'basic-button',
         }}
+        style={{
+          marginTop:'6px'
+        }}
+
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {type=='chart' ? list.map(([img , name])=>{
+          return <MenuItem onClick={handleClose}
+
+          >
+            <div className='flex' style={{alignItems:'center'}} onClick={()=>handleChart(name)}>
+              <img src={require('../image/' + img)} className='svg_size'/>
+              <span>{name}</span>
+            </div>
+            </MenuItem>
+        }) :
+          list.map((item)=>{
+            return <MenuItem onClick={handleClose}>{item}
+            </MenuItem>
+          })
+        }
+
+
       </Menu>
     </div>
   );

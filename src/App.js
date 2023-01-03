@@ -5,12 +5,21 @@ import { ChartStock, StockChart } from './Components/ChartStock';
 import raw from './ACC.txt'
 import { HorizontalNav } from './Components/HorizontalNav';
 import { VerticalNav } from './Components/verticalNav';
+import { VerticalNav2 } from './Components/verticalNav2';
+import { BottomNav } from './Components/bottomNav';
+
 
 
 function App() {
   const [initialData , set_data] = useState(initialData)
     const [isLoading , setLoding] = useState(true)
     const [name , setName] = useState()
+    try{
+      console.log(require('./acc.txt'))
+    }catch(err){
+      // console.log(err)
+    }
+
     useEffect(()=>{
 
         fetch(raw).then((r)=> r.text()).then((r)=>{
@@ -56,7 +65,11 @@ function App() {
 
         <div className='main_container'>
           <VerticalNav/>
-          <StockChart initialData={initialData} name={name}/>
+          <div style={{flex:'1'}}>
+            <StockChart initialData={initialData} name={name}/>
+            <BottomNav />
+          </div>
+          <VerticalNav2/>
         </div>
         {/* <ChartStock initialData={initialData}/> */}
 

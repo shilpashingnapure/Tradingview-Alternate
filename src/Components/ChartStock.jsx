@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
+import { useSelector } from "react-redux"
 import {
     elderRay,
     ema,
@@ -39,10 +40,11 @@ import {
 
   } from "react-financial-charts";
 
+
 const ChartStock = ({name , initialData , height , width , ratio})=>{
 
     const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
-    const margin = { left: 25, right: 120, top: 15, bottom: 22 };
+    const margin = { left: 25, right: 55, top: 15, bottom: 65};
     const {data , xScale , xAccessor , displayXAccessor  } = ScaleProvider(initialData)
     const pricesDisplayFormat = format(".2f");
     const max = xAccessor(data[data.length-1])
@@ -53,7 +55,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   const yExtents = (data) => {
     return [data.low, data.high];
   };
-  const dateTimeFormat = "%d %b";
+  const dateTimeFormat = "%d %b %Y %H:%M";
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
   const barChartExtents = (data) => {
@@ -83,7 +85,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   };
 
   const [showGrid , setGrid] = useState(false)
-  const [chartType , setType] = useState('candle')
+  const chart_type = useSelector(state => state.chartType)
 
 
 
@@ -114,15 +116,11 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
             {/*candle Chart*/}
             <Chart id={3}  yExtents={yExtents}>
-            <XAxis showGridLines={showGrid} showTickLabel={true} />
-            <YAxis showGridLines={showGrid}  />
+            <XAxis showGridLines={showGrid} showTickLabel={true} showDomain={false}/>
+            <YAxis showGridLines={showGrid}  showDomain={false} showTicks={false}/>
 
-
-
-            <CandlestickSeries />
-
-            {/*
-            <LineSeries
+             {chart_type == 'Candles' ? <CandlestickSeries /> : ''}
+             {chart_type == 'Line' ? <LineSeries
                 connectNulls={false}
                 defined={(d) => d !== undefined && !isNaN(d)}
                 hoverStrokeWidth={4}
@@ -132,24 +130,26 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
                 strokeStyle={"#2196f3"}
                 strokeWidth={1}
                 yAccessor={yEdgeIndicator}/>
-            }
-            <AreaSeries yAccessor={yEdgeIndicator}/>
-            <KagiSeries currentValueStroke={"#2196f3"}/> */}
+             : ''}
+             {chart_type == 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
+             {chart_type == 'Kagi' ? <KagiSeries currentValueStroke={"#2196f3"}/>:''}
+
+
             {/* <VolumeProfileSeries /> */}
 
             <MouseCoordinateY
-              rectWidth={45}
+              rectWidth={margin.right}
               displayFormat={pricesDisplayFormat}/>
 
             <MouseCoordinateX
-            rectWidth={45}
+            rectWidth={margin.right}
             displayFormat={timeDisplayFormat}
 
             />
 
             <EdgeIndicator
             itemType="last"
-            rectWidth={45}
+            rectWidth={margin.right}
             fill={openCloseColor}
             lineStroke={openCloseColor}
             displayFormat={pricesDisplayFormat}

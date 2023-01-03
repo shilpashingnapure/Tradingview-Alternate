@@ -15,9 +15,17 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import Crop54OutlinedIcon from '@mui/icons-material/Crop54Outlined';
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import { PositionedMenu } from './ToogleDropDown'
+import { SubMenu } from './ToogleDropDown'
 import { Avatar } from '@mui/material'
+import { useDispatch } from 'react-redux';
+import { handleChartType } from '../REDUX/action';
+import { SearchModel } from './SearchModel'
 export const HorizontalNav = ()=>{
+
+    const dispatch = useDispatch()
+    function handleChart(value){
+        dispatch(handleChartType(value))
+    }
     return <nav className="hori_navbar">
 
         {/* company section */}
@@ -25,7 +33,9 @@ export const HorizontalNav = ()=>{
             <li>
                 <div className='avtar'><Avatar sx={{ width: 20, height: 20 , fontSize:13 , backgroundColor:'green' }} >M</Avatar></div>
             </li>
-            <li>GBPUSD</li>
+            <li>
+                <SearchModel/>
+            </li>
             <li>
                 <AddCircleOutlineOutlinedIcon fontSize="small"/>
             </li>
@@ -39,19 +49,20 @@ export const HorizontalNav = ()=>{
             <li>W</li>
             <li>M</li>
             <li style={{marginLeft:'-5px',marginTop:'2px'}}>
-                <PositionedMenu />
+                <SubMenu list={['1m','1h']} />
             </li>
         </ul>
         {/* Chart section */}
         <ul className='hori_navbar--chartSection'>
-            <li>
+            <li onClick={()=> handleChart('Candles')}>
                 <img src={candle} className='svg_size'/>
             </li>
-            <li>
+            <li onClick={()=> handleChart('Line')}>
                 <img src={line} className='svg_size' />
             </li>
             <li style={{marginLeft:'-5px',marginTop:'-3px'}}>
-                <PositionedMenu />
+                <SubMenu list={[['bar.svg','Bars'],['candle.svg','Candles'],
+                ['line.svg','Line'],['area.svg','Area'],['kagi.svg','Kagi']]} type='chart'/>
             </li>
         </ul>
 
