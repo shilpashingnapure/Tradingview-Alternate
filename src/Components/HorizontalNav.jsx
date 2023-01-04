@@ -17,10 +17,11 @@ import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import { SubMenu } from './ToogleDropDown'
 import { Avatar } from '@mui/material'
-import { useDispatch } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { handleChartType } from '../REDUX/action';
 import { SearchModel } from './SearchModel'
 export const HorizontalNav = ()=>{
+    
 
     const dispatch = useDispatch()
     function handleChart(value){

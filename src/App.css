@@ -1,8 +1,17 @@
-
-
+/* GENERIZE CSS */
 .main_container{
     width: 100%;
     display: flex;
     height: fit-content;
     background-color: #edf2ff;
+}
+
+.flex{
+    display: flex;
+    gap:.6rem;
+}
+
+.svg_size{
+    width:2rem;
+    height: auto;
 }

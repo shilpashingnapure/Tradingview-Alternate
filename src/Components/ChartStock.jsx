@@ -55,8 +55,13 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   const yExtents = (data) => {
     return [data.low, data.high];
   };
+
+
   const dateTimeFormat = "%d %b %Y %H:%M";
   const timeDisplayFormat = timeFormat(dateTimeFormat);
+
+
+  // DATA 
 
   const barChartExtents = (data) => {
     return data.volume;
@@ -85,6 +90,9 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   };
 
   const [showGrid , setGrid] = useState(false)
+
+
+  // REDUX TO FIND OUT WHICH TYPE OF CHART WANT
   const chart_type = useSelector(state => state.chartType)
 
 
@@ -108,18 +116,24 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             xScale={xScale}
             xAccessor={xAccessor}
             xExtents={xExtents}
-            zoomAnchor={lastVisibleItemBasedZoomAnchor}
+            // zoomAnchor={lastVisibleItemBasedZoomAnchor}
+
 
         >
 
 
 
-            {/*candle Chart*/}
+            {/*ChartS*/}
             <Chart id={3}  yExtents={yExtents}>
             <XAxis showGridLines={showGrid} showTickLabel={true} showDomain={false}/>
             <YAxis showGridLines={showGrid}  showDomain={false} showTicks={false}/>
 
+
+              {/* CANDLE STICK CHART */}
              {chart_type == 'Candles' ? <CandlestickSeries /> : ''}
+
+
+             {/* LINE SERIES CHART */}
              {chart_type == 'Line' ? <LineSeries
                 connectNulls={false}
                 defined={(d) => d !== undefined && !isNaN(d)}
@@ -131,12 +145,20 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
                 strokeWidth={1}
                 yAccessor={yEdgeIndicator}/>
              : ''}
+
+
+             {/* AREA CHART */}
              {chart_type == 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
+
+
+              {/* KAGI CHART */}
              {chart_type == 'Kagi' ? <KagiSeries currentValueStroke={"#2196f3"}/>:''}
 
 
             {/* <VolumeProfileSeries /> */}
 
+
+            {/* MOUS COORDINATES */}
             <MouseCoordinateY
               rectWidth={margin.right}
               displayFormat={pricesDisplayFormat}/>
@@ -147,6 +169,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
             />
 
+            {/* INDICATOR OF PRICE */}
             <EdgeIndicator
             itemType="last"
             rectWidth={margin.right}
@@ -155,14 +178,15 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             displayFormat={pricesDisplayFormat}
             yAccessor={yEdgeIndicator}
             />
+
+
+            {/* COMPANY NAME IN BACKGROUND LABEL  */}
             <LabelAnnotation
             fillStyle={"#dcdcdc"}
             fontFamily={"-apple-system, system-ui, Roboto, 'Helvetica Neue', Ubuntu, sans-serif"}
             fontSize={75}
             fontWeight={"bold"}
             text={name}
-            // selectCanvas={"(canvases: any) => canvases.bg"}
-            // textAlign={"middle"}
             opacity= {.1}
             x={650}
             y={300}
@@ -170,13 +194,12 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
             <ZoomButtons />
+
+            {/* SHOWING DATA OPEN/CLOSE/HIGH/LOW  */}
             <OHLCTooltip
             origin={[400, 10]}
             fontSize={13}
-            fontWeight={600}
-
-
-            />
+            fontWeight={600}/>
 
 
 

@@ -1,3 +1,5 @@
+/* HORIZONTAL AND BOTTOM NAVBAR */
+
 .hori_navbar , .bottom_nav{
     display: flex;
     align-items: center;
@@ -5,6 +7,24 @@
     border-bottom: 3px solid #e0e3eb;
     background-color: #fff;
 }
+
+.hori_navbar .hori_navbar--chartSection{
+    border-right: none;
+}
+.hori_navbar--chartSection{
+    align-items: center;
+    margin-top: 5px;
+}
+
+.hori_navbar > ul:nth-last-child(2){
+    justify-content: end;
+    align-items: center;
+    flex: 1;
+}
+.hori_navbar > ul:last-child{
+    align-items: center;
+}
+
 
 .bottom_nav{
     color:#131722;
@@ -26,18 +46,6 @@
 
 }
 
-.svg_size{
-    width:2rem;
-    height: auto;
-}
-
-.hori_navbar .hori_navbar--chartSection{
-    border-right: none;
-}
-.hori_navbar--chartSection{
-    align-items: center;
-    margin-top: 5px;
-}
 
 .indicators_section{
     border-left: 1px solid #e0e3eb;
@@ -47,14 +55,7 @@
     gap:5px;
 }
 
-.hori_navbar > ul:nth-last-child(2){
-    justify-content: end;
-    align-items: center;
-    flex: 1;
-}
-.hori_navbar > ul:last-child{
-    align-items: center;
-}
+
 .btn{
     background-color: #2962ff;
     color:#fff;
@@ -63,12 +64,15 @@
     padding: .3rem .9rem;
 }
 
-
-
-.flex{
-    display: flex;
-    gap:.6rem;
+.avtar{
+    border: 1px solid black;
+    padding: 2px;
+    border-radius: 50%;
 }
+
+
+
+/* vERTICAL NAVBAR SECTION */
 
 .vertical_nav{
     border: 3px solid #e0e3eb;
@@ -102,13 +106,9 @@
     justify-content: center;
 }
 
-.avtar{
-    border: 1px solid black;
-    padding: 2px;
-    border-radius: 50%;
-}
 
 
+/* SUB MENU MUI COMPONENT CLASSES  */
 .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper{
     box-shadow: 0 2px 4px #0003 !important;
     border-radius: 3px !important;
@@ -116,10 +116,42 @@
     width: 12rem;
 }
 
-
-
 .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper > ul li{
     padding: .3rem .5rem;
     font-size: 14px !important;
     color:#131722;
+}
+
+
+
+/* SEARCH MODEL */
+.search_heading{
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem .9rem;
+}
+.search_heading > h1{
+    font-size: 1.8rem;
+}
+.search_heading > button{
+    border: none;
+    background-color: transparent;
+}
+
+.search_section{
+    border-top: 1px solid #e0e3eb;
+    border-bottom: 1px solid #e0e3eb;
+    align-items: center;
+    padding:.8rem .9rem;
+    padding-right: 1rem;
+}
+.search_section > input{
+    border:none;
+    padding:.2rem;
+    flex: 1;
+}
+
+
+input:focus{
+    outline:none;
 }

@@ -6,6 +6,7 @@ import bursh from '../image/bursh.svg'
 import text from '../image/text.svg'
 import pattern from '../image/pattern.svg'
 import positionTool from '../image/positionTool.svg'
+import { Brush } from "react-financial-charts"
 export const VerticalNav = ()=>{
 
     return <nav className="vertical_nav">
