@@ -52,7 +52,8 @@ function App() {
           let name = data[0].split('/s')[0]
           setName(name)
           let full_data = []
-          data.map((txt)=>{
+          for(let i = 0 ; i < data.length ; i++){
+            let txt = data[i]
             if(txt){
               let obj = {}
               let lst = txt.split('/s')
@@ -63,16 +64,16 @@ function App() {
               let date = whole_date.slice(6,8)
               let full_Date = `${year}-${month}-${date} ${time}`
               obj['date'] = full_Date
-              obj.open = lst[3],
-              obj.low = lst[4],
-              obj.high = lst[5],
-              obj.close = lst[6],
+              obj.open = lst[3]
+              obj.low = lst[4]
+              obj.high = lst[5]
+              obj.close = lst[6]
               obj.volume = lst[7]
               full_data.push(obj)
-              return
+              
             }
 
-          })
+          }
           set_data(full_data)
           setLoding(false)
 
