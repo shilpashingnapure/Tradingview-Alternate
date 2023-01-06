@@ -18,14 +18,19 @@ import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import { SubMenu } from './ToogleDropDown'
 import { Avatar } from '@mui/material'
 import { useDispatch} from 'react-redux';
-import { handleChartType } from '../REDUX/action';
+import { handleChartType, handleReplayCheck } from '../REDUX/action';
 import { SearchModel } from './SearchModel'
 export const HorizontalNav = ()=>{
-    
+
 
     const dispatch = useDispatch()
     function handleChart(value){
         dispatch(handleChartType(value))
+    }
+
+    function handleReplay(){
+        dispatch(handleReplayCheck())
+
     }
     return <nav className="hori_navbar">
 
@@ -85,7 +90,7 @@ export const HorizontalNav = ()=>{
                 <AccessAlarmOutlinedIcon fontSize='small'/>
                 <span>Alert</span>
             </li>
-            <li className='flex'>
+            <li className='flex' onClick={handleReplay}>
                 <FastRewindOutlinedIcon fontSize='small'/>
                 <span>Replay</span>
             </li>

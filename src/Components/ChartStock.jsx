@@ -61,7 +61,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
 
-  // DATA 
+  // DATA
 
   const barChartExtents = (data) => {
     return data.volume;

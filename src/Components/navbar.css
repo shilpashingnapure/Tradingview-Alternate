@@ -35,7 +35,7 @@
 
 }
 
-.hori_navbar > ul , .bottom_nav > ul{
+.hori_navbar > ul , .bottom_nav  ul{
     list-style: none;
     display: flex;
     gap:.8rem;

@@ -19,7 +19,11 @@ function App() {
 
     const [data , setdata] = useState(raw)
 
-    const value = useSelector((state)=> state.searchValue)
+    const {searchValue , replay} = useSelector((state)=> state)
+
+    const [nextValue , setnext] = useState(0)
+
+    const [mainData , setMainData] = useState([])
 
 
 
@@ -29,7 +33,7 @@ function App() {
 
       try{
 
-        let a = require(`./02JAN/${value}.txt`)
+        let a = require(`./02JAN/${searchValue}.txt`)
         console.log(a)
         // setdata(a)
         getData(a)
@@ -40,7 +44,7 @@ function App() {
 
 
 
-    },[value])
+    },[searchValue])
 
       function getData(data){
         fetch(data).then((r)=> {
@@ -70,7 +74,7 @@ function App() {
               obj.close = lst[6]
               obj.volume = lst[7]
               full_data.push(obj)
-              
+
             }
 
           }
@@ -80,6 +84,57 @@ function App() {
         })
 
       }
+
+      function replayNextButton(){
+          setnext(prev =>{
+            if (prev === initialData.length - 1) {
+              return 0;
+            } else {
+              return prev + 1;
+            }
+          })
+
+          setMainData([...mainData , initialData[nextValue]])
+
+
+
+      }
+
+      const [check , setchek] = useState(false)
+
+      function handlereset(){
+        setMainData(initialData)
+      }
+
+      function handlePlay(){
+
+        let start = setInterval(()=>{
+          if(nextValue > 5){
+            return ()=>clearInterval(start)
+          }
+          setnext(prev =>{
+            if (prev === initialData.length - 1) {
+              return 0;
+            } else {
+              return prev + 1;
+            }
+          })
+
+
+
+        },1000)
+
+
+
+        return ()=> {
+          clearInterval(start);
+        };
+
+
+
+      }
+
+
 
       if(isLoading){
         return <div>loding....</div>
@@ -92,10 +147,10 @@ function App() {
         <div className='main_container'>
           <VerticalNav/>
           <div style={{flex:'1'}}>
-            <StockChart initialData={initialData} name={name}/>
+            <StockChart initialData={replay ? mainData : initialData} name={name}/>
             <BottomNav />
           </div>
-          <VerticalNav2/>
+          <VerticalNav2 replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset}/>
         </div>
 
 
