@@ -3,20 +3,12 @@ import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import { useSelector } from "react-redux"
 import {
-    elderRay,
-    ema,
     discontinuousTimeScaleProviderBuilder,
     Chart,
     ChartCanvas,
-    CurrentCoordinate,
-    BarSeries,
     CandlestickSeries,
-    ElderRaySeries,
     LineSeries,
-    MovingAverageTooltip,
     OHLCTooltip,
-    SingleValueTooltip,
-    lastVisibleItemBasedZoomAnchor,
     XAxis,
     YAxis,
     CrossHairCursor,
@@ -26,19 +18,13 @@ import {
     ZoomButtons,
     withDeviceRatio,
     withSize,
-    Cursor,
-    BarAnnotation,
-    Label,
     LabelAnnotation,
     AreaSeries,
     KagiSeries,
-    VolumeProfileSeries,
+    mousePosition,
+    CurrentCoordinate,
+} from "react-financial-charts";
 
-
-
-
-
-  } from "react-financial-charts";
 
 
 const ChartStock = ({name , initialData , height , width , ratio})=>{
@@ -52,6 +38,8 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
     const xExtents = [min , max]
 
 
+
+
   const yExtents = (data) => {
     return [data.low, data.high];
   };
@@ -61,28 +49,13 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
 
+
+
   // DATA
 
-  const barChartExtents = (data) => {
-    return data.volume;
-  };
-
-  const candleChartExtents = (data) => {
-    return [data.high, data.low];
-  };
 
   const yEdgeIndicator = (data) => {
     return data.close;
-  };
-
-  // const volumeColor = (data) => {
-  //   return data.close < data.open
-  //     ? "rgba(38, 166, 154, 0.3)"
-  //     : "rgba(239, 83, 80, 0.3)";
-  // };
-
-  const volumeSeries = (data) => {
-    return data.volume;
   };
 
   const openCloseColor = (data) => {
@@ -96,15 +69,17 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   const chart_type = useSelector(state => state.chartType)
 
 
+  function handle(e){
+    console.log(e)
+  }
+
+
+
+
 
   return (
     <div>
-        {/* <button onClick={()=> setGrid(!showGrid)}>show Grid</button>
-        <select onChange={(e)=> setType(e.target.value)}>
-            <option value='candle'>Candle</option>
-            <option value='line'>Line</option>
-            <option value='area'>area</option>
-        </select> */}
+        {/* <button onClick={()=> setGrid(!showGrid)}>show Grid</button>*/}
         <ChartCanvas
             height={height}
             ratio={ratio}
@@ -124,17 +99,18 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
             {/*ChartS*/}
-            <Chart id={3}  yExtents={yExtents}>
+            <Chart id={1}  yExtents={yExtents}
+            >
             <XAxis showGridLines={showGrid} showTickLabel={true} showDomain={false}/>
             <YAxis showGridLines={showGrid}  showDomain={false} showTicks={false}/>
 
 
               {/* CANDLE STICK CHART */}
-             {chart_type == 'Candles' ? <CandlestickSeries /> : ''}
+             {chart_type === 'Candles' ? <CandlestickSeries /> : ''}
 
 
              {/* LINE SERIES CHART */}
-             {chart_type == 'Line' ? <LineSeries
+             {chart_type === 'Line' ? <LineSeries
                 connectNulls={false}
                 defined={(d) => d !== undefined && !isNaN(d)}
                 hoverStrokeWidth={4}
@@ -148,26 +124,29 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
              {/* AREA CHART */}
-             {chart_type == 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
+             {chart_type === 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
 
 
               {/* KAGI CHART */}
-             {chart_type == 'Kagi' ? <KagiSeries currentValueStroke={"#2196f3"}/>:''}
+             {chart_type === 'Kagi' ? <KagiSeries currentValueStroke={"#2196f3"}/>:''}
 
 
             {/* <VolumeProfileSeries /> */}
 
 
             {/* MOUS COORDINATES */}
-            <MouseCoordinateY
+
+
+              <MouseCoordinateY
+                rectWidth={margin.right}
+                displayFormat={pricesDisplayFormat}/>
+
+              <MouseCoordinateX
               rectWidth={margin.right}
-              displayFormat={pricesDisplayFormat}/>
+              displayFormat={timeDisplayFormat}
 
-            <MouseCoordinateX
-            rectWidth={margin.right}
-            displayFormat={timeDisplayFormat}
+              />
 
-            />
 
             {/* INDICATOR OF PRICE */}
             <EdgeIndicator

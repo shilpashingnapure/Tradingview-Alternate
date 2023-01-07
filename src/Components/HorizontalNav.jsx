@@ -1,7 +1,6 @@
 import './navbar.css'
 import candle from '../image/candle.svg'
 import line from '../image/line.svg'
-import kagi from '../image/kagi.svg'
 import React from "react"
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
@@ -61,10 +60,10 @@ export const HorizontalNav = ()=>{
         {/* Chart section */}
         <ul className='hori_navbar--chartSection'>
             <li onClick={()=> handleChart('Candles')}>
-                <img src={candle} className='svg_size'/>
+                <img alt='icon' src={candle} className='svg_size'/>
             </li>
             <li onClick={()=> handleChart('Line')}>
-                <img src={line} className='svg_size' />
+                <img alt='icon' src={line} className='svg_size' />
             </li>
             <li style={{marginLeft:'-5px',marginTop:'-3px'}}>
                 <SubMenu list={[['bar.svg','Bars'],['candle.svg','Candles'],

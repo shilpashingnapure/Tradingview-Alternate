@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import icon from '../image/downArrow.svg'
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
 import { IconButton } from '@mui/material';
@@ -53,12 +52,12 @@ export const SubMenu = ({list , type}) => {
         }}
 
       >
-        {type=='chart' ? list.map(([img , name])=>{
+        {type==='chart' ? list.map(([img , name])=>{
           return <MenuItem onClick={handleClose}
 
           >
             <div className='flex' style={{alignItems:'center'}} onClick={()=>handleChart(name)}>
-              <img src={require('../image/' + img)} className='svg_size'/>
+              <img alt='icon' src={require('../image/' + img)} className='svg_size'/>
               <span>{name}</span>
             </div>
             </MenuItem>

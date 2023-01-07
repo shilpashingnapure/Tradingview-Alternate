@@ -1,8 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
-import React, { useState , useEffect}  from 'react';
-import { ChartStock, StockChart } from './Components/ChartStock';
-import raw from './02JAN/ACC.txt'
+import React, { useState , useEffect , useRef}  from 'react';
+import { StockChart } from './Components/ChartStock';
 import { HorizontalNav } from './Components/HorizontalNav';
 import { VerticalNav } from './Components/verticalNav';
 import { VerticalNav2 } from './Components/verticalNav2';
@@ -13,17 +11,16 @@ import { useSelector } from 'react-redux';
 
 
 function App() {
-  const [initialData , set_data] = useState(initialData)
-    const [isLoading , setLoding] = useState(true)
-    const [name , setName] = useState()
+  const [initialData , set_data] = useState([])
+  const [isLoading , setLoding] = useState(true)
+  const [name , setName] = useState()
+  const {searchValue , replay} = useSelector((state)=> state)
+  const [nextValue , setnext] = useState(0)
+  const [mainData , setMainData] = useState([])
 
-    const [data , setdata] = useState(raw)
+  const [play , setplay] = useState(false)
 
-    const {searchValue , replay} = useSelector((state)=> state)
 
-    const [nextValue , setnext] = useState(0)
-
-    const [mainData , setMainData] = useState([])
 
 
 
@@ -31,28 +28,24 @@ function App() {
 
     useEffect(()=>{
 
+      //search functionlities for check if that file is present or not
       try{
 
         let a = require(`./02JAN/${searchValue}.txt`)
-        console.log(a)
-        // setdata(a)
         getData(a)
       }catch(err){
         console.log(err)
       }
-
-
-
-
     },[searchValue])
 
+
+    //fetching the data
       function getData(data){
         fetch(data).then((r)=> {
           let content = r.text()
           return content
         }).then((r)=>{
           let data = r.split(',').join('/s').split('\n')
-          // setName()
           let name = data[0].split('/s')[0]
           setName(name)
           let full_data = []
@@ -85,6 +78,8 @@ function App() {
 
       }
 
+
+      //on click next show next data(Candle)
       function replayNextButton(){
           setnext(prev =>{
             if (prev === initialData.length - 1) {
@@ -100,39 +95,37 @@ function App() {
 
       }
 
-      const [check , setchek] = useState(false)
 
+
+      //reset charts
       function handlereset(){
         setMainData(initialData)
       }
 
+
+      let id = useRef()
+
+      // handle play of charts
       function handlePlay(){
-
-        let start = setInterval(()=>{
-          if(nextValue > 5){
-            return ()=>clearInterval(start)
-          }
+        setplay(true)
+        id.current = setInterval(()=>{
           setnext(prev =>{
-            if (prev === initialData.length - 1) {
-              return 0;
-            } else {
-              return prev + 1;
-            }
-          })
-
-
-
-        },1000)
-
-
-
-        return ()=> {
-          clearInterval(start);
-        };
-
+              if (prev === initialData.length - 1) {
+                return 0;
+              } else {
+                return prev + 1;
+              }
+            })
+          },500)
 
 
       }
+
+      function handlePause(){
+        clearInterval(id.current)
+        setplay(false)
+      }
+
 
 
 
@@ -147,10 +140,10 @@ function App() {
         <div className='main_container'>
           <VerticalNav/>
           <div style={{flex:'1'}}>
-            <StockChart initialData={replay ? mainData : initialData} name={name}/>
+            <StockChart initialData={replay ? initialData.slice(0,nextValue) : initialData} name={name}/>
             <BottomNav />
           </div>
-          <VerticalNav2 replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset}/>
+          <VerticalNav2 replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset} handlePause={handlePause} play={play}/>
         </div>
 
 
