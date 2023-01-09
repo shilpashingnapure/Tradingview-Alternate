@@ -14,7 +14,8 @@ function App() {
   const [initialData , set_data] = useState([])
   const [isLoading , setLoding] = useState(true)
   const [name , setName] = useState()
-  const {searchValue , replay} = useSelector((state)=> state)
+  const {searchValue , replay  , backgroundColorType} = useSelector((state)=> state)
+
   const [nextValue , setnext] = useState(0)
   const [mainData , setMainData] = useState([])
 
@@ -26,9 +27,10 @@ function App() {
 
 
 
+
     useEffect(()=>{
 
-      //search functionlities for check if that file is present or not
+        //search functionlities for check if that file is present or not
       try{
 
         let a = require(`./02JAN/${searchValue}.txt`)
@@ -66,6 +68,7 @@ function App() {
               obj.high = lst[5]
               obj.close = lst[6]
               obj.volume = lst[7]
+              obj.idx = i
               full_data.push(obj)
 
             }
@@ -77,6 +80,12 @@ function App() {
         })
 
       }
+
+      //handle index for replay
+      function handleIndex(index){
+        setnext(index)
+      }
+
 
 
       //on click next show next data(Candle)
@@ -126,21 +135,21 @@ function App() {
         setplay(false)
       }
 
-
-
-
+      const {solid , gradient , backgroundType} = backgroundColorType
+      let stylegradientBackground = {background : `linear-gradient(${gradient.color1} , ${gradient.color2})`}
+      let stylePlainBackground = {background : solid.color}
       if(isLoading){
         return <div>loding....</div>
       }
   return (
     <div className="App">
 
-        <HorizontalNav />
+        <HorizontalNav handleIndex={handleIndex}/>
 
-        <div className='main_container'>
+        <div className='main_container' style={backgroundType == 'solid' ?  stylePlainBackground : stylegradientBackground}>
           <VerticalNav/>
           <div style={{flex:'1'}}>
-            <StockChart initialData={replay ? initialData.slice(0,nextValue) : initialData} name={name}/>
+            <StockChart initialData={replay ? initialData.slice(0, nextValue) : initialData} name={name}/>
             <BottomNav />
           </div>
           <VerticalNav2 replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset} handlePause={handlePause} play={play}/>

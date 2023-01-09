@@ -21,8 +21,13 @@ import {
     LabelAnnotation,
     AreaSeries,
     KagiSeries,
-    mousePosition,
-    CurrentCoordinate,
+    financeDiscontinuousScale,
+    HoverTooltip,
+    ToolTipTSpanLabel,
+    SingleTooltip,
+    ToolTipText,
+
+
 } from "react-financial-charts";
 
 
@@ -30,8 +35,15 @@ import {
 const ChartStock = ({name , initialData , height , width , ratio})=>{
 
     const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
+
+    const {data , xScale , xAccessor , displayXAccessor} = ScaleProvider(initialData)
+
+
     const margin = { left: 25, right: 55, top: 15, bottom: 65};
-    const {data , xScale , xAccessor , displayXAccessor  } = ScaleProvider(initialData)
+
+
+
+
     const pricesDisplayFormat = format(".2f");
     const max = xAccessor(data[data.length-1])
     const min = xAccessor(data[Math.max(0 , data.length-100)])
@@ -58,21 +70,25 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
     return data.close;
   };
 
-  const openCloseColor = (data) => {
-    return data.close < data.open ? "#26a69a" : "#ef5350";
-  };
+
 
   const [showGrid , setGrid] = useState(false)
 
 
   // REDUX TO FIND OUT WHICH TYPE OF CHART WANT
-  const chart_type = useSelector(state => state.chartType)
+  const {chartType , colors} = useSelector(state => state)
 
+  const openCloseColor = (data) => {
+    return data.close < data.open ? colors.closeFill : colors.openFill;
+  };
 
-  function handle(e){
-    console.log(e)
+  const openCloseWickColor = (data)=>{
+    return data.close < data.open ? colors.closeWick : colors.openWick
   }
 
+  const openCloseBorderColor = (data)=>{
+    return data.close < data.open ? colors.closeBorder : colors.openBorder
+  }
 
 
 
@@ -91,6 +107,8 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             xScale={xScale}
             xAccessor={xAccessor}
             xExtents={xExtents}
+
+
             // zoomAnchor={lastVisibleItemBasedZoomAnchor}
 
 
@@ -99,18 +117,17 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
             {/*ChartS*/}
-            <Chart id={1}  yExtents={yExtents}
-            >
+            <Chart id={1}  yExtents={yExtents} >
             <XAxis showGridLines={showGrid} showTickLabel={true} showDomain={false}/>
             <YAxis showGridLines={showGrid}  showDomain={false} showTicks={false}/>
 
 
               {/* CANDLE STICK CHART */}
-             {chart_type === 'Candles' ? <CandlestickSeries /> : ''}
+             {chartType === 'Candles' ? <CandlestickSeries fill={openCloseColor} wickStroke={colors.wickCheck ? openCloseWickColor : (d) => (d.close > d.open ? "rgba(0,0,0,0)" : "rgba(0,0,0,0)")} stroke={openCloseBorderColor} /> : ''}
 
 
              {/* LINE SERIES CHART */}
-             {chart_type === 'Line' ? <LineSeries
+             {chartType === 'Line' ? <LineSeries
                 connectNulls={false}
                 defined={(d) => d !== undefined && !isNaN(d)}
                 hoverStrokeWidth={4}
@@ -124,11 +141,11 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
              {/* AREA CHART */}
-             {chart_type === 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
+             {chartType === 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
 
 
               {/* KAGI CHART */}
-             {chart_type === 'Kagi' ? <KagiSeries currentValueStroke={"#2196f3"}/>:''}
+             {chartType === 'Kagi' ? <KagiSeries currentValueStroke={"#2196f3"}/>:''}
 
 
             {/* <VolumeProfileSeries /> */}
@@ -152,7 +169,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             <EdgeIndicator
             itemType="last"
             rectWidth={margin.right}
-            fill={openCloseColor}
+            fill={colors.lastValueColor}
             lineStroke={openCloseColor}
             displayFormat={pricesDisplayFormat}
             yAccessor={yEdgeIndicator}
@@ -178,7 +195,11 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             <OHLCTooltip
             origin={[400, 10]}
             fontSize={13}
-            fontWeight={600}/>
+            fontWeight={600}
+
+
+            />
+
 
 
 
@@ -196,6 +217,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
         </ChartCanvas>
+
 
     </div>
   )

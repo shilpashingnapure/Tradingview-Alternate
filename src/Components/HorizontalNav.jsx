@@ -1,7 +1,7 @@
 import './navbar.css'
 import candle from '../image/candle.svg'
 import line from '../image/line.svg'
-import React from "react"
+import React, { useState } from "react"
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
@@ -15,12 +15,35 @@ import Crop54OutlinedIcon from '@mui/icons-material/Crop54Outlined';
 import FullscreenOutlinedIcon from '@mui/icons-material/FullscreenOutlined';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import { SubMenu } from './ToogleDropDown'
-import { Avatar } from '@mui/material'
+import { Avatar  , Modal } from '@mui/material'
 import { useDispatch} from 'react-redux';
 import { handleChartType, handleReplayCheck } from '../REDUX/action';
 import { SearchModel } from './SearchModel'
-export const HorizontalNav = ()=>{
+import { Box } from "@mui/system"
+import { ChartSetting } from './ChartSetting';
 
+
+const style = {
+    position: 'absolute',
+    top: '30%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '40%',
+    height:'80px',
+    bgcolor: '#fff',
+    boxShadow: '0 2px 4px #0003',
+    borderRadius:'6px',
+    zIndex:999
+  };
+
+
+export const HorizontalNav = ({handleIndex})=>{
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const [indexValue , setIndexValue] = useState(0)
 
     const dispatch = useDispatch()
     function handleChart(value){
@@ -28,7 +51,11 @@ export const HorizontalNav = ()=>{
     }
 
     function handleReplay(){
+        setOpen(false)
+        handleIndex(Number(indexValue))
         dispatch(handleReplayCheck())
+
+
 
     }
     return <nav className="hori_navbar">
@@ -89,9 +116,23 @@ export const HorizontalNav = ()=>{
                 <AccessAlarmOutlinedIcon fontSize='small'/>
                 <span>Alert</span>
             </li>
-            <li className='flex' onClick={handleReplay}>
+
+            <li className='flex' >
                 <FastRewindOutlinedIcon fontSize='small'/>
-                <span>Replay</span>
+                <span onClick={handleOpen}>Replay</span>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <input type='text'  onChange={(e)=> setIndexValue(e.target.value)}/>
+                        <button onClick={handleReplay}>Ok</button>
+                    </Box>
+                </Modal>
+
+
             </li>
         </ul>
 
@@ -122,7 +163,7 @@ export const HorizontalNav = ()=>{
                 <SearchOutlinedIcon/>
             </li>
             <li>
-                <SettingsOutlinedIcon/>
+                <ChartSetting/>
             </li>
             <li>
                 <FullscreenOutlinedIcon/>

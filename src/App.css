@@ -3,9 +3,7 @@
     width: 100%;
     display: flex;
     height: fit-content;
-    background-color: #edf2ff;
-
-
+    /* background:linear-gradient(#fff , #000); */
 }
 
 
@@ -38,3 +36,59 @@
     width:2rem;
     height: auto;
 }
+
+
+
+
+/* input type color CSS */
+
+
+  input[type="color"] {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: 1px solid #d1d4dc;
+    cursor: pointer;
+    height: 2.2rem;
+    padding: 4px;
+    width: 2.2rem;
+    border-radius:3px;
+  }
+
+  input[type='color']:disabled{
+    background-color: #f0f3fa;
+    border-color: #d1d4dc;
+    color: #b2b5be;
+    filter: grayscale(50%)
+  }
+  label{
+    font-size: 14px;
+  }
+
+  input[type='checkbox']{
+    width: 18px;
+    height: 18px;
+  }
+  *:focus{
+    border-radius: 0;
+    outline: none;
+  }
+
+  ::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  ::-webkit-color-swatch{
+    border: 0;
+    border-radius: 3px;
+  }
+
+  ::-moz-color-swatch,
+  ::-moz-focus-inner{
+    border: 0;
+  }
+
+  ::-moz-focus-inner{
+    padding: 0;
+  }

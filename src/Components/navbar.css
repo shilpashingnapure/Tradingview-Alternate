@@ -123,6 +123,11 @@
 }
 
 
+/* MUI COMPONENT MODEL CLASSES FOR BACKGROUND */
+.css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop{
+    background-color:transparent !important;
+}
+
 
 /* SEARCH MODEL */
 .search_heading{
@@ -154,4 +159,73 @@
 
 input:focus{
     outline:none;
+}
+
+
+/* chart Candle Setting */
+.colorsSection{
+    display: flex;
+    gap:.8rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .colorsSection > div{
+    display: flex;
+    align-items: center;
+    gap:.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .titleSetting{
+    font-size: 11px;
+    color: #787b86;
+    display: inline-block;
+    margin: .6rem 0 1.5rem 0;
+
+  }
+
+  /* model MUI classess TAB classes modifications */
+
+  /* main tab div class */
+  .css-35zqo5-MuiTabs-root{
+    flex-basis: 36% !important;
+    font-size: 14px !important;
+    padding-top: 6px !important;
+
+  }
+
+  /* others tabs classes */
+  .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+    text-align: left !important;
+    text-transform: none !important;
+    align-items: flex-start !important;
+    font-size: 14px !important;
+    color:#131722 !important;
+    padding: 6px 0 6px 20px !important;
+  }
+
+  /* active tab class */
+  .css-h0q0iv-MuiButtonBase-root-MuiTab-root{
+    text-transform: none !important;
+    min-height: fit-content !important;
+    justify-content: flex-start !important;
+    color: #131722 !important;
+    padding: 6px 0 6px 20px !important;
+  }
+
+  /* left side active first and others tabs */
+  .css-h0q0iv-MuiButtonBase-root-MuiTab-root.Mui-selected , .css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+    background-color: #2962ff !important;
+    color:#fff !important;
+
+}
+
+.css-h0q0iv-MuiButtonBase-root-MuiTab-root.Mui-selected img{
+    filter: invert(100%) ;
+
+}
+
+.css-10d9dml-MuiTabs-indicator {
+    display: none !important;
 }
