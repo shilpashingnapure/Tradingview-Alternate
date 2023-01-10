@@ -61,12 +61,12 @@ export default function VerticalTabs() {
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
         <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(0)} />
-        <Tab label="Item Two" {...a11yProps(1)} />
-        <Tab label="Item Three" {...a11yProps(2)} />
+        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(1)} />
+        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(2)} />
         <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Apparenace</p>} {...a11yProps(3)} />
-        <Tab label="Item five" {...a11yProps(4)} />
-        <Tab label="Item Six" {...a11yProps(5)} />
-        <Tab label="Item Seven" {...a11yProps(6)} />
+        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(4)} />
+        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(5)} />
+        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(6)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <CandleSetting/>

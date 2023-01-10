@@ -111,14 +111,14 @@
 
 
 /* SUB MENU MUI COMPONENT CLASSES  */
-.MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper{
+.MuiPaper-root{
     box-shadow: 0 2px 4px #0003 !important;
     border-radius: 3px !important;
     text-align: left !important;
     width: 12rem;
 }
 
-.css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper > ul li{
+.MuiPaper-root > ul li{
     padding: .3rem .5rem;
     font-size: 14px !important;
     color:#131722;
@@ -126,7 +126,7 @@
 
 
 /* MUI COMPONENT MODEL CLASSES FOR BACKGROUND */
-.css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop{
+.MuiModal-backdrop{
     background-color:transparent !important;
 }
 
@@ -190,44 +190,40 @@ input:focus{
   /* model MUI classess TAB classes modifications */
 
   /* main tab div class */
-  .css-35zqo5-MuiTabs-root{
+  .MuiTabs-root{
     flex-basis: 36% !important;
     font-size: 14px !important;
     padding-top: 6px !important;
+    display: flex;
+
 
   }
 
   /* others tabs classes */
-  .css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
-    text-align: left !important;
-    text-transform: none !important;
-    align-items: flex-start !important;
+  .MuiButtonBase-root.MuiTab-root{
     font-size: 14px !important;
     color:#131722 !important;
     padding: 6px 0 6px 20px !important;
-  }
-
-  /* active tab class */
-  .css-h0q0iv-MuiButtonBase-root-MuiTab-root{
-    text-transform: none !important;
+    display: flex;
+    justify-content: flex-start;
+    text-align: left;
     min-height: fit-content !important;
-    justify-content: flex-start !important;
-    color: #131722 !important;
-    padding: 6px 0 6px 20px !important;
+    text-transform: none !important;
+
   }
 
-  /* left side active first and others tabs */
-  .css-h0q0iv-MuiButtonBase-root-MuiTab-root.Mui-selected , .css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+ /* left side active first and others tabs */
+  .MuiButtonBase-root.MuiTab-root.Mui-selected  {
     background-color: #2962ff !important;
     color:#fff !important;
 
 }
 
-.css-h0q0iv-MuiButtonBase-root-MuiTab-root.Mui-selected img{
+.MuiButtonBase-root.MuiTab-root.Mui-selected img{
     filter: invert(100%) ;
 
 }
 
-.css-10d9dml-MuiTabs-indicator {
+.MuiTabs-indicator {
     display: none !important;
 }
