@@ -9,7 +9,7 @@ export const ApparenaceSetting = ()=>{
     const [typeBg , setTypeBg] = useState('solid')
     const dispatch = useDispatch()
     function handleBackgroundSolid(value){
-        dispatch(handleBackgroundColor({...backgroundColorType , solid : {color : value}}))
+        dispatch(handleBackgroundColor({...backgroundColorType , backgroundType:'solid' , solid : {color : value}}))
     }
 
     function handleBackgroundGradient(key , value){
