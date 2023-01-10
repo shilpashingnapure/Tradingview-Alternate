@@ -10,8 +10,12 @@ its similar to TV(Tradingview).
 - VisualStudio Code, Git, & GitHub 
 
 ## Live Demo
-
 Live demo for this project can be found in this [link](https://demo-deploying-chart.vercel.app).
+
+https://user-images.githubusercontent.com/69167064/211664317-8f7ae7c5-45fe-4bc9-850b-61bd75675630.mp4
+
+
+
 
 ## Feature
 - Premium features of Tradingview (free)
