@@ -47,8 +47,9 @@ export const SubMenu = ({list , type}) => {
         MenuListProps={{
           'aria-labelledby': 'basic-button',
         }}
-        style={{
-          marginTop:'6px'
+        sx={{
+          marginTop:'6px',
+          
         }}
 
       >

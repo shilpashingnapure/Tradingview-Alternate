@@ -225,6 +225,6 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 }
 
 
-export const StockChart = withSize({ style: { minHeight: 650 } })(
+export const StockChart = withSize({ style: { height:'100%' } })(
     withDeviceRatio()(ChartStock)
   );
