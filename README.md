@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/69167064/211664317-8f7ae7c5-45fe-4bc9-
 
 ## Contributing
 Fork the Project \
-Open a Pull Request
+Open a Pull Request \
 testing, new features are welcome.
 
 ## Show your support
