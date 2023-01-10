@@ -39,7 +39,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
     const {data , xScale , xAccessor , displayXAccessor} = ScaleProvider(initialData)
 
 
-    const margin = { left: 25, right: 55, top: 15, bottom: 65};
+    const margin = { left: 25, right: 55, top: 15, bottom: 45};
 
 
 
