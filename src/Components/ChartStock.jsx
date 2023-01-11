@@ -21,12 +21,6 @@ import {
     LabelAnnotation,
     AreaSeries,
     KagiSeries,
-    financeDiscontinuousScale,
-    HoverTooltip,
-    ToolTipTSpanLabel,
-    SingleTooltip,
-    ToolTipText,
-
 
 } from "react-financial-charts";
 
@@ -39,7 +33,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
     const {data , xScale , xAccessor , displayXAccessor} = ScaleProvider(initialData)
 
 
-    const margin = { left: 25, right: 55, top: 15, bottom: 45};
+    const margin = { left: 25, right: 55, top: 15, bottom: 32};
 
 
 
@@ -199,8 +193,6 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
             />
-
-
 
 
 
