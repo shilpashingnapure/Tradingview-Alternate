@@ -5,19 +5,29 @@ import { HorizontalNav } from './Components/HorizontalNav';
 import { VerticalNav } from './Components/verticalNav';
 import { VerticalNav2 } from './Components/verticalNav2';
 import { BottomNav } from './Components/bottomNav';
-import { useSelector } from 'react-redux';
+import { handleReplayCheck, handleReplayValue } from './REDUX/action';
+import { useDispatch, useSelector } from 'react-redux';
+// import { useState } from 'react-usestateref';
 
 
 
 
 function App() {
+
+  const dispatch = useDispatch()
   const [initialData , set_data] = useState([])
   const [isLoading , setLoding] = useState(true)
   const [name , setName] = useState()
-  const {searchValue , replay  , backgroundColorType} = useSelector((state)=> state)
+  const {searchValue , replay  , replayValue, backgroundColorType} = useSelector((state)=> state)
 
-  const [nextValue , setnext] = useState(0)
-  const [mainData , setMainData] = useState([])
+  const value = replayValue != 0 ? replayValue.idx.index : 0
+
+
+  const [ nextValue = value , setnext] = useState()
+
+
+
+
 
   const [play , setplay] = useState(false)
 
@@ -86,19 +96,28 @@ function App() {
         setnext(index)
       }
 
+      function updateNextValue(value){
+        setnext(value)
+      }
 
 
       //on click next show next data(Candle)
       function replayNextButton(){
+
           setnext(prev =>{
-            if (prev === initialData.length - 1) {
-              return 0;
+
+            if(prev == undefined){
+              updateNextValue(nextValue)
+            }
+            if (prev === initialData.length-1) {
+              handlereset()
+              return undefined
             } else {
               return prev + 1;
             }
           })
 
-          setMainData([...mainData , initialData[nextValue]])
+
 
 
 
@@ -108,7 +127,14 @@ function App() {
 
       //reset charts
       function handlereset(){
-        setMainData(initialData)
+
+
+
+        dispatch(handleReplayCheck(false))
+        dispatch(handleReplayValue(0))
+
+
+
       }
 
 
@@ -119,8 +145,13 @@ function App() {
         setplay(true)
         id.current = setInterval(()=>{
           setnext(prev =>{
-              if (prev === initialData.length - 1) {
-                return 0;
+              if(prev == undefined){
+                updateNextValue(nextValue)
+              }
+              if (prev === initialData.length-1) {
+                handlePause()
+                handlereset()
+                return undefined
               } else {
                 return prev + 1;
               }
@@ -133,6 +164,7 @@ function App() {
       function handlePause(){
         clearInterval(id.current)
         setplay(false)
+
       }
 
       const {solid , gradient , backgroundType} = backgroundColorType
@@ -143,16 +175,15 @@ function App() {
       }
   return (
     <div className="App">
-
-        <HorizontalNav handleIndex={handleIndex}/>
+        <HorizontalNav />
 
         <div className='main_container' style={backgroundType == 'solid' ?  stylePlainBackground : stylegradientBackground}>
           <VerticalNav/>
           <div style={{flex:'1'}}>
-            <StockChart initialData={replay ? initialData.slice(0, nextValue) : initialData} name={name}/>
+            <StockChart initialData={nextValue != 0 && replay ? initialData.slice(0, nextValue + 1) : initialData} name={name}/>
             <BottomNav />
           </div>
-          <VerticalNav2 replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset} handlePause={handlePause} play={play}/>
+          <VerticalNav2 replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset} handlePause={handlePause} play={play} />
         </div>
 
 

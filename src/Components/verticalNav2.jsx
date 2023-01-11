@@ -10,16 +10,19 @@ import { useSelector  , useDispatch} from "react-redux"
 import nextbutton from '../image/nextButton.svg'
 import playbutton from '../image/playButton.svg'
 import resetbutton from '../image/reset.svg'
-import { handleReplayCheck } from '../REDUX/action';
+import { handleReplayCheck  , handleReplayValue} from '../REDUX/action';
 
 export const VerticalNav2 = ({replayNextButton , handlePlay , handlePause , play})=>{
 
-    const {replay} = useSelector(state => state)
+
+
+    const {replay , replayValue} = useSelector(state => state)
 
     const dispatch = useDispatch()
 
     function handleReplay(){
-        dispatch(handleReplayCheck())
+        dispatch(handleReplayCheck(false))
+        dispatch(handleReplayValue(0))
 
     }
 
@@ -45,12 +48,12 @@ export const VerticalNav2 = ({replayNextButton , handlePlay , handlePause , play
             </li>
         </ul>
         {replay ? <div className="btns">
-            <button onClick={()=> replayNextButton()}>
-                <img alt='icon' src={nextbutton} className='svg_size'/>
+            <button onClick={()=> replayNextButton()} >
+                <img alt='icon' src={nextbutton} className='svg_size' />
             </button>
-            {play ? <button onClick={()=> handlePause()}>pause</button> :
-                <button onClick={()=> handlePlay()}>
-                <img alt='icon' src={playbutton} className='svg_size'/>
+            {play ? <button onClick={()=> handlePause()} >pause</button> :
+                <button onClick={()=> handlePlay()} >
+                <img alt='icon' src={playbutton} className='svg_size' />
             </button>
             }
 

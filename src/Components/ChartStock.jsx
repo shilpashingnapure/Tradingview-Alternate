@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
-import { useSelector } from "react-redux"
+
+import { useDispatch, useSelector } from "react-redux"
 import {
     discontinuousTimeScaleProviderBuilder,
     Chart,
@@ -21,16 +22,32 @@ import {
     LabelAnnotation,
     AreaSeries,
     KagiSeries,
+    HoverTooltip,
+    ClickCallback,
+    SingleValueTooltip,
+    AlternatingFillAreaSeries,
+    OHLCSeries,
+    RenkoSeries,
+    BarSeries,
+    PointAndFigureSeries,
+    lastVisibleItemBasedZoomAnchor,
+    heikinAshi
+
 
 } from "react-financial-charts";
+import { handleReplayValue } from '../REDUX/action';
 
 
 
 const ChartStock = ({name , initialData , height , width , ratio})=>{
 
+    const ha = heikinAshi()
+    console.log(ha(initialData))
+    const dispatch = useDispatch()
+
     const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
 
-    const {data , xScale , xAccessor , displayXAccessor} = ScaleProvider(initialData)
+    const {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(initialData)
 
 
     const margin = { left: 25, right: 55, top: 15, bottom: 32};
@@ -61,7 +78,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
   const yEdgeIndicator = (data) => {
-    return data.close;
+    return data.close
   };
 
 
@@ -70,7 +87,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
   // REDUX TO FIND OUT WHICH TYPE OF CHART WANT
-  const {chartType , colors} = useSelector(state => state)
+  const {chartType , colors , replayValue} = useSelector(state => state)
 
   const openCloseColor = (data) => {
     return data.close < data.open ? colors.closeFill : colors.openFill;
@@ -86,9 +103,48 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
 
+  //handle the hover tool tip
+  const Content = (data)=>{
+    const {currentItem} = data
+    return {
+      x : currentItem.date ,
+      y:[{
+        label : 'Open',
+        value : currentItem.open.toString(),
+        // stroke:"#ED561B"
+      },{
+        label : 'Close',
+        value : currentItem.close.toString(),
+        // stroke:'#ED561B'
+      },{
+        label : 'Low',
+        value : currentItem.low.toString()
+      },{
+        label : 'High',
+        value : currentItem.high.toString()
+      }
+    ]
+    }
+  }
+
+
+  var currItem;
+
+  const singleValueToolTip = (_, data) => {
+    currItem = data.currentItem
+    return data.currentItem
+  }
+  const handle = ()=>{
+    dispatch(handleReplayValue(currItem))
+
+
+  }
+
+
 
   return (
     <div>
+
         {/* <button onClick={()=> setGrid(!showGrid)}>show Grid</button>*/}
         <ChartCanvas
             height={height}
@@ -101,23 +157,27 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             xScale={xScale}
             xAccessor={xAccessor}
             xExtents={xExtents}
-
-
-            // zoomAnchor={lastVisibleItemBasedZoomAnchor}
+            padding = { { left:0, right: 200} }
+            zoomAnchor={lastVisibleItemBasedZoomAnchor}
 
 
         >
 
 
 
+
             {/*ChartS*/}
-            <Chart id={1}  yExtents={yExtents} >
+            <Chart id={1}  yExtents={yExtents} padding={15} >
             <XAxis showGridLines={showGrid} showTickLabel={true} showDomain={false}/>
             <YAxis showGridLines={showGrid}  showDomain={false} showTicks={false}/>
 
 
               {/* CANDLE STICK CHART */}
-             {chartType === 'Candles' ? <CandlestickSeries fill={openCloseColor} wickStroke={colors.wickCheck ? openCloseWickColor : (d) => (d.close > d.open ? "rgba(0,0,0,0)" : "rgba(0,0,0,0)")} stroke={openCloseBorderColor} /> : ''}
+             {chartType === 'Candles' ? <CandlestickSeries
+                                          fill={openCloseColor}
+
+                                          wickStroke={colors.wickCheck ? openCloseWickColor : (d) => (d.close > d.open ? "rgba(0,0,0,0)" : "rgba(0,0,0,0)")}
+                                          stroke={colors.borderCheck ? openCloseBorderColor : (d) => (d.close > d.open ? "rgba(0,0,0,0)" : "rgba(0,0,0,0)")} /> : ''}
 
 
              {/* LINE SERIES CHART */}
@@ -139,7 +199,31 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
               {/* KAGI CHART */}
-             {chartType === 'Kagi' ? <KagiSeries currentValueStroke={"#2196f3"}/>:''}
+             {chartType === 'Kagi' ? <KagiSeries stroke={openCloseColor}/>:''}
+
+
+
+             {/* BASE LINE CHART */}
+             {chartType == 'Base Line' ? <AlternatingFillAreaSeries yAccessor={yEdgeIndicator} baseAt={100}/>  : '' }
+
+             {/* OHLCSeries CHART */}
+              {chartType == 'OHLC' ? <OHLCSeries yAccessor={(d) => ({ open: d.open, high: d.high, low: d.low, close: d.close })}
+               stroke={openCloseColor}/> : ''}
+
+
+              {/* Renko Series Chart */}
+               {chartType == 'Renko' ? <RenkoSeries yAccessor={(d) => ({ open: d.open, high: d.high, low: d.low, close: d.close })}
+                    stroke={{up: "#fff", down: "#fff"}}
+                    fill = {{up: '#26a69a' , down: '#ef5350',partial: 'red'}}
+                    /> : ''}
+
+                {/* BAR SERIES */}
+                { chartType == 'Bars' ? <BarSeries yAccessor={yEdgeIndicator}/>:''}
+
+
+
+                {/* PointAndFigureSeries CHART */}
+                { chartType == 'PointAndFigure' ? <PointAndFigureSeries xAccessor={xAccessor}/> : ''}
 
 
             {/* <VolumeProfileSeries /> */}
@@ -156,7 +240,11 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
               rectWidth={margin.right}
               displayFormat={timeDisplayFormat}
 
+
               />
+
+            <ClickCallback onDoubleClick={handle}/>
+
 
 
             {/* INDICATOR OF PRICE */}
@@ -193,6 +281,24 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
 
             />
+
+            {/* <HoverTooltip
+              tooltip={{content : Content}}
+              yAccessor={yEdgeIndicator}
+
+
+            /> */}
+
+            <SingleValueTooltip
+
+
+              yLabel={'Price'}
+              yAccessor={yEdgeIndicator}
+              displayValuesFor={singleValueToolTip}
+
+              />
+
+
 
 
 

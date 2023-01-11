@@ -1,9 +1,10 @@
-import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE} from './action'
+import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE, REPLAYVALUE} from './action'
 
 const initital = {
     chartType : 'Candles',
     searchValue:'ACC',
     replay:false,
+    replayValue : 0,
     colors :{
         openFill : "#26a69a",
         closeFill:"#ef5350",
@@ -37,11 +38,13 @@ export const reducer = (state = initital , {type , payload})=>{
         case SEARCH:
             return {...state , searchValue : payload}
         case REPLAY:
-            return {...state , replay: !state.replay}
+            return {...state , replay: payload}
         case COLORS:
             return {...state , colors: payload}
         case BACKGROUNDCHANGE:
             return {...state , backgroundColorType : payload}
+        case REPLAYVALUE:
+            return {...state , replayValue : payload}
         default:
             return state
     }
