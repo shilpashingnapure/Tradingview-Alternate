@@ -4,7 +4,11 @@ export const REPLAY = 'REPLAY'
 export const COLORS = 'COLORS'
 export const BACKGROUNDCHANGE = 'BACKGROUNDCHANGE'
 export const REPLAYVALUE = 'REPLAYVALUE'
+export const DATA = 'DATA'
 
+export const handleData = (payload)=>{
+    return {type : DATA , payload}
+}
 export const handleChartType = (payload)=>{
     return {type:ADD , payload}
 }

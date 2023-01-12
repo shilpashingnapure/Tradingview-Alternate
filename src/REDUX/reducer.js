@@ -1,6 +1,7 @@
-import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE, REPLAYVALUE} from './action'
+import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE, REPLAYVALUE , DATA} from './action'
 
 const initital = {
+    data : [],
     chartType : 'Candles',
     searchValue:'ACC',
     replay:false,
@@ -33,6 +34,8 @@ const initital = {
 }
 export const reducer = (state = initital , {type , payload})=>{
     switch(type){
+        case DATA:
+            return {...state , data : payload}
         case ADD:
             return {...state , chartType:payload}
         case SEARCH:

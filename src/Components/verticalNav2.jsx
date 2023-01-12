@@ -5,27 +5,12 @@ import dataWindow from '../image/dataWindow.svg'
 import hotlist from '../image/hotlist.svg'
 import calender from '../image/calender.svg'
 import idea from '../image/idea.svg'
-import { useSelector  , useDispatch} from "react-redux"
-
-import nextbutton from '../image/nextButton.svg'
-import playbutton from '../image/playButton.svg'
-import resetbutton from '../image/reset.svg'
-import { handleReplayCheck  , handleReplayValue} from '../REDUX/action';
-
-export const VerticalNav2 = ({replayNextButton , handlePlay , handlePause , play})=>{
 
 
 
-    const {replay , replayValue} = useSelector(state => state)
 
-    const dispatch = useDispatch()
 
-    function handleReplay(){
-        dispatch(handleReplayCheck(false))
-        dispatch(handleReplayValue(0))
-
-    }
-
+export const VerticalNav2 = ()=>{
     return <nav className="vertical_nav nav2">
         <ul>
             <li>
@@ -47,23 +32,5 @@ export const VerticalNav2 = ({replayNextButton , handlePlay , handlePause , play
                 <img alt='icon' src={idea} className='svg_size'/>
             </li>
         </ul>
-        {replay ? <div className="btns">
-            <button onClick={()=> replayNextButton()} >
-                <img alt='icon' src={nextbutton} className='svg_size' />
-            </button>
-            {play ? <button onClick={()=> handlePause()} >pause</button> :
-                <button onClick={()=> handlePlay()} >
-                <img alt='icon' src={playbutton} className='svg_size' />
-            </button>
-            }
-
-
-            <button onClick={()=> handleReplay()}>
-                <img alt='icon' src={resetbutton} className='svg_size'/>
-            </button>
-        </div>: ''}
-
-
-
-    </nav>
+        </nav>
 }

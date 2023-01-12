@@ -3,19 +3,31 @@
 .main_container{
     width: 100%;
     display: flex;
-    height:calc(100vh - 73px);
+    height:calc(100vh - 80px);
     /* background:linear-gradient(#fff , #000); */
 }
 
 
+.containerHeight.main_container{
+  height : calc(100vh - 120px);
+}
+
+.headingReplay{
+  position: absolute;
+  top:0;
+  right:40px;
+  z-index:99;
+  font-size: 30px;
+}
 
 .btns{
+
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     gap:1.5rem;
-    margin-top: 5rem;
-    border: 1px solid black;
-    padding:.5rem .2rem .5rem 0;
+    padding:.5rem .8rem;
+    width: 100%;
+
 }
 .btns button{
     background-color: #fff;

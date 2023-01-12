@@ -31,7 +31,8 @@ import {
     BarSeries,
     PointAndFigureSeries,
     lastVisibleItemBasedZoomAnchor,
-    heikinAshi
+    heikinAshi,
+    Cursor
 
 
 } from "react-financial-charts";
@@ -41,13 +42,14 @@ import { handleReplayValue } from '../REDUX/action';
 
 const ChartStock = ({name , initialData , height , width , ratio})=>{
 
-    const ha = heikinAshi()
-    console.log(ha(initialData))
+    const replay = useSelector((state) => state.replay)
     const dispatch = useDispatch()
 
-    const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
+    const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.time))
 
     const {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(initialData)
+
+
 
 
     const margin = { left: 25, right: 55, top: 15, bottom: 32};
@@ -68,7 +70,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   };
 
 
-  const dateTimeFormat = "%d %b %Y %H:%M";
+  const dateTimeFormat = "%a %d %b %Y %H:%M";
   const timeDisplayFormat = timeFormat(dateTimeFormat);
 
 
@@ -107,7 +109,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   const Content = (data)=>{
     const {currentItem} = data
     return {
-      x : currentItem.date ,
+      x : new Date(currentItem.time) ,
       y:[{
         label : 'Open',
         value : currentItem.open.toString(),
@@ -157,7 +159,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             xScale={xScale}
             xAccessor={xAccessor}
             xExtents={xExtents}
-            padding = { { left:0, right: 200} }
+            // padding = { { left:0, right: 200} }
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
 
 
@@ -231,10 +233,10 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
             {/* MOUS COORDINATES */}
 
-
-              <MouseCoordinateY
+              {!replay ?  <MouseCoordinateY
                 rectWidth={margin.right}
-                displayFormat={pricesDisplayFormat}/>
+                displayFormat={pricesDisplayFormat}/>: ''}
+
 
               <MouseCoordinateX
               rectWidth={margin.right}
@@ -306,10 +308,12 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
 
         </Chart>
 
+            {/* CURSOR CHANGING */}
+            {replay ?  <Cursor disableYCursor={true}/>:  <CrossHairCursor />}
 
 
 
-            <CrossHairCursor />
+
 
 
 

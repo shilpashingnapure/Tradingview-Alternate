@@ -3,14 +3,14 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
-import { IconButton } from '@mui/material';
+import { Divider, IconButton } from '@mui/material';
 import './navbar.css'
 import { useDispatch } from 'react-redux';
 import { handleChartType } from '../REDUX/action';
 
 
 
-export const SubMenu = ({list , type}) => {
+export const SubMenu = ({list , type , handleTimeFrameConvertion}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -24,6 +24,8 @@ export const SubMenu = ({list , type}) => {
   function handleChart(value){
     dispatch(handleChartType(value))
   }
+
+
 
   return (
     <div>
@@ -49,12 +51,12 @@ export const SubMenu = ({list , type}) => {
         }}
         sx={{
           marginTop:'6px',
-          
+
         }}
 
       >
-        {type==='chart' ? list.map(([img , name])=>{
-          return <MenuItem onClick={handleClose}
+        {type==='chart' ? list.map(([img , name] , index)=>{
+          return <MenuItem onClick={handleClose} key={index}
 
           >
             <div className='flex' style={{alignItems:'center'}} onClick={()=>handleChart(name)}>
@@ -63,10 +65,18 @@ export const SubMenu = ({list , type}) => {
             </div>
             </MenuItem>
         }) :
-          list.map((item)=>{
-            return <MenuItem onClick={handleClose}>{item}
+        <div>
+
+          {list.min.map((item , index)=>{
+            return <MenuItem key={index} onClick={()=>{handleClose();handleTimeFrameConvertion('min' , item)}}>
+                {item} minutes
             </MenuItem>
-          })
+          })}
+          <Divider />
+          {list.hour.map((item , index)=>{
+            return <MenuItem key={index} onClick={()=> {handleClose() ; handleTimeFrameConvertion('hour' , item)}}>{item} Hours</MenuItem>
+          })}
+        </div>
         }
 
 

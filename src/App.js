@@ -5,14 +5,20 @@ import { HorizontalNav } from './Components/HorizontalNav';
 import { VerticalNav } from './Components/verticalNav';
 import { VerticalNav2 } from './Components/verticalNav2';
 import { BottomNav } from './Components/bottomNav';
-import { handleReplayCheck, handleReplayValue } from './REDUX/action';
+import { handleData, handleReplayCheck, handleReplayValue } from './REDUX/action';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useState } from 'react-usestateref';
+import { FunHandleReplay } from './Components/replayHandleFun';
+
+
+
 
 
 
 
 function App() {
+
+
+
 
   const dispatch = useDispatch()
   const [initialData , set_data] = useState([])
@@ -25,7 +31,7 @@ function App() {
 
   const [ nextValue = value , setnext] = useState()
 
-
+  console.log(nextValue)
 
 
 
@@ -72,23 +78,36 @@ function App() {
               let month = whole_date.slice(4,6)
               let date = whole_date.slice(6,8)
               let full_Date = `${year}-${month}-${date} ${time}`
-              obj['date'] = full_Date
-              obj.open = lst[3]
-              obj.low = lst[4]
-              obj.high = lst[5]
-              obj.close = lst[6]
-              obj.volume = lst[7]
+              obj.time = (new Date(full_Date)).getTime()
+              obj.open = parseFloat(lst[3])
+              obj.low = parseFloat(lst[4])
+              obj.high = parseFloat(lst[5])
+              obj.close = parseFloat(lst[6])
+              obj.volume = parseFloat(lst[7])
               obj.idx = i
               full_data.push(obj)
 
             }
 
           }
+
+
+
           set_data(full_data)
+
+          dispatch(handleData(full_data))
+
+          // set_data(d)
           setLoding(false)
 
         })
 
+      }
+
+
+      // handle custom Time frame with help of function
+      function handleTimeFrame(data){
+          set_data(data)
       }
 
       //handle index for replay
@@ -132,6 +151,7 @@ function App() {
 
         dispatch(handleReplayCheck(false))
         dispatch(handleReplayValue(0))
+        setnext(undefined)
 
 
 
@@ -175,15 +195,26 @@ function App() {
       }
   return (
     <div className="App">
-        <HorizontalNav />
+        <HorizontalNav handleTimeFrame={handleTimeFrame} />
 
-        <div className='main_container' style={backgroundType == 'solid' ?  stylePlainBackground : stylegradientBackground}>
+        <div className={replay ? `main_container containerHeight` : `main_container`} style={backgroundType == 'solid' ?  stylePlainBackground : stylegradientBackground}>
           <VerticalNav/>
+
+          {/* MAIN CONTANET */}
           <div style={{flex:'1'}}>
+
+            {/* CHART CANVAS */}
             <StockChart initialData={nextValue != 0 && replay ? initialData.slice(0, nextValue + 1) : initialData} name={name}/>
+
+            {/* SHOW THIS WHEN CLICK ON REPLAY FOR HANDLE THE PLAY/PAUSE , NEXT CANDLE */}
+            {replay ? <FunHandleReplay replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset} handlePause={handlePause} play={play}/> : null}
+
+            {/* BOTTOM NAVBAR */}
             <BottomNav />
           </div>
-          <VerticalNav2 replayNextButton={replayNextButton} handlePlay={handlePlay} handlereset={handlereset} handlePause={handlePause} play={play} />
+
+
+          <VerticalNav2 />
         </div>
 
 

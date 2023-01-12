@@ -21,6 +21,7 @@ import { handleChartType, handleReplayCheck } from '../REDUX/action';
 import { SearchModel } from './SearchModel'
 import { Box } from "@mui/system"
 import { ChartSetting } from './ChartSetting';
+import convert from 'candlestick-convert';
 
 
 const style = {
@@ -37,7 +38,25 @@ const style = {
   };
 
 
-export const HorizontalNav = ()=>{
+export const HorizontalNav = ({handleTimeFrame })=>{
+
+    const Data = useSelector((state)=> state.data)
+    function handleTimeFrameConvertion(type , newFrame){
+        let convertToSec = newFrame
+        if(type == 'min'){
+            convertToSec = newFrame * 60
+        }else if(type == 'hour'){
+            convertToSec = newFrame * 3600
+        }else if(type == 'day'){
+            convertToSec = newFrame * 24 * 3600
+        }else if(type == 'week'){
+            convertToSec = newFrame * 86400 * 7
+        }
+
+        const d = convert.json(Data , 60 , convertToSec)
+        handleTimeFrame(d)
+
+    }
 
     const charts = [['bar.svg','Bars'],['candle.svg','Candles'],
             ['line.svg','Line'],['area.svg','Area'],['kagi.svg','Kagi'],
@@ -74,13 +93,15 @@ export const HorizontalNav = ()=>{
 
         {/* time data section */}
         <ul>
-            <li>15m</li>
-            <li>1h</li>
-            <li>D</li>
-            <li>W</li>
-            <li>M</li>
+            <li onClick={()=> handleTimeFrameConvertion('min',1)}>1m</li>
+            <li onClick={()=> handleTimeFrameConvertion('min',1)}>5m</li>
+            <li onClick={()=> handleTimeFrameConvertion('min',15)}>15m</li>
+            <li onClick={()=> handleTimeFrameConvertion('hour',1)}>1h</li>
+            <li onClick={()=> handleTimeFrameConvertion('day' , 1)}>D</li>
+            <li onClick={()=> handleTimeFrameConvertion('week' , 1)}>W</li>
+            {/* <li onClick={()=> handleTimeFrameConvertion('month' , 1)}>M</li> */}
             <li style={{marginLeft:'-5px',marginTop:'2px'}}>
-                <SubMenu list={['1m','1h']} />
+                <SubMenu list={{min : [1,3,5,15,30,45] , hour : [1,2,3,4]}} handleTimeFrameConvertion={handleTimeFrameConvertion}/>
             </li>
         </ul>
         {/* Chart section */}
