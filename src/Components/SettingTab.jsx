@@ -45,7 +45,7 @@ function a11yProps(index) {
 export default function VerticalTabs() {
   const [value, setValue] = React.useState(0);
 
-  
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -62,34 +62,14 @@ export default function VerticalTabs() {
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
         <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(0)} />
-        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(1)} />
-        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(2)} />
-        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Apparenace</p>} {...a11yProps(3)} />
-        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(4)} />
-        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(5)} />
-        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Symbol</p>} {...a11yProps(6)} />
+        <Tab icon={<img src={candle} className='svg_size'/>} iconPosition="start" label={<p>Apparenace</p>} {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <CandleSetting/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={value} index={3}>
         <ApparenaceSetting/>
       </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Item Seven
-      </TabPanel>
-    </Box>
+      </Box>
   );
 }

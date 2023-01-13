@@ -53,7 +53,8 @@ export const HorizontalNav = ({handleTimeFrame })=>{
             convertToSec = newFrame * 86400 * 7
         }
 
-        const d = convert.json(Data , 60 , convertToSec)
+        let d = convert.json(Data , 60 , convertToSec)
+        d = d.map(v => ({...v, fullyFormed: true , date : new Date(v.time)}))
         handleTimeFrame(d)
 
     }
@@ -76,6 +77,8 @@ export const HorizontalNav = ({handleTimeFrame })=>{
     function handleReplay(){
         dispatch(handleReplayCheck(true))
     }
+
+    
     return <nav className="hori_navbar">
 
         {/* company section */}
@@ -93,7 +96,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
 
         {/* time data section */}
         <ul>
-            <li onClick={()=> handleTimeFrameConvertion('min',1)}>1m</li>
+            <li onClick={()=>handleTimeFrameConvertion('min',1)}>1m</li>
             <li onClick={()=> handleTimeFrameConvertion('min',5)}>5m</li>
             <li onClick={()=> handleTimeFrameConvertion('min',15)}>15m</li>
             <li onClick={()=> handleTimeFrameConvertion('hour',1)}>1h</li>

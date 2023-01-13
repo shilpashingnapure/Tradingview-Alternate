@@ -24,7 +24,7 @@ function App() {
   useEffect(()=>{
     //search functionlities for check if that file is present or not
     try{
-      let a = require(`./02JAN/${searchValue}.txt`)
+      let a = require(`./12JAN/${searchValue}.txt`)
       getData(a)
     }catch(err){
       console.log(err)
@@ -45,22 +45,15 @@ function App() {
       for(let i = 0 ; i < data.length ; i++){
         let txt = data[i]
         if(txt){
-          let obj = {}
-          let lst = txt.split('/s')
-          let whole_date = lst[1]
-          let time = lst[2]
+          let [_,whole_date , time , open , low , high , close , volume] = txt.split('/s')
           let year = whole_date.slice(0,4)
           let month = whole_date.slice(4,6)
           let date = whole_date.slice(6,8)
           let full_Date = `${year}-${month}-${date} ${time}`
-          obj.time = (new Date(full_Date)).getTime()
-          obj.open = parseFloat(lst[3])
-          obj.low = parseFloat(lst[4])
-          obj.high = parseFloat(lst[5])
-          obj.close = parseFloat(lst[6])
-          obj.volume = parseFloat(lst[7])
-          obj.idx = i
+          let stampTime = (new Date(full_Date)).getTime()
+          let obj = new MethodObj(i ,stampTime,full_Date , open , close , low , high , volume)
           full_data.push(obj)
+
         }
       }
       set_data(full_data)
@@ -69,9 +62,29 @@ function App() {
     })
   }
 
+  // function for creating object
+  function MethodObj(index , stampTime , date , open , close , low , high , volume){
+    let obj = {
+      idx : parseFloat(index),
+      time : stampTime ,
+      date : date ,
+      open : parseFloat(open),
+      close : parseFloat(close),
+      low : parseFloat(low),
+      high : parseFloat(high),
+      volume : parseFloat(volume),
+      fullyFormed : true
+    }
+
+    return obj
+  }
+
   // handle custom Time frame hook with help of function
   function handleTimeFrame(data){
-    set_data(data)
+    if(data.length != 0){
+      set_data(data)
+    }
+
   }
 
   // use this function for first time update the hook for change the UI

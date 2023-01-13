@@ -31,7 +31,9 @@ import {
     PointAndFigureSeries,
     lastVisibleItemBasedZoomAnchor,
     heikinAshi,
-    Cursor
+    Cursor,
+    renko,
+    InteractiveYCoordinate
 } from "react-financial-charts";
 import { handleReplayValue } from '../REDUX/action';
 
@@ -39,27 +41,31 @@ import { handleReplayValue } from '../REDUX/action';
 
 const ChartStock = ({name , initialData , height , width , ratio})=>{
 
+    // REDUX TO FIND OUT WHICH TYPE OF CHART WANT
+    const {chartType , colors , replayValue , replay} = useSelector(state => state)
 
     const dispatch = useDispatch()
-    const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.time))
-    const {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(initialData)
-    const margin = { left: 25, right: 55, top: 15, bottom: 32};
+    const calculateRenko = renko()
+
+    const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
+
+    var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(initialData)
+    if(chartType == 'Renko'){
+      var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(calculateRenko(initialData))
+    }
+
+    const margin = { left: 25, right: 55, top: 15, bottom: 25};
     const pricesDisplayFormat = format(".2f");
     const max = xAccessor(data[data.length-1])
     const min = xAccessor(data[Math.max(0 , data.length-100)])
+
     const base = data[Math.floor(data.length / 2)].close
-    // console.log(base)
     const xExtents = [min , max]
 
     // SHOW THE PRICE AND TIME FORMAT ON CHART
     const dateTimeFormat = "%a %d %b %Y %H:%M";
     const timeDisplayFormat = timeFormat(dateTimeFormat);
     const [showGrid , setGrid] = useState(false)
-
-    // REDUX TO FIND OUT WHICH TYPE OF CHART WANT
-    const {chartType , colors , replayValue , replay} = useSelector(state => state)
-
-
 
 
   // DATA
@@ -76,9 +82,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
     return data.close < data.open ? colors.closeFill : colors.openFill;
   };
 
-  const ocpClose = (data)=>{
-    return data.close < data.open ? 'red' : data.close == data.open ? 'orange' : 'green';
-  }
+
 
   // WICK COLOR
   const openCloseWickColor = (data)=>{
@@ -98,7 +102,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
   const Content = (data)=>{
     const {currentItem} = data
     return {
-      x : new Date(currentItem.time) ,
+      x : currentItem.date ,
       y:[{
         label : 'Open',
         value : currentItem.open.toString(),
@@ -197,11 +201,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
                 stroke={openCloseColor}/> : ''}
 
               {/* Renko Series Chart */}
-              {chartType == 'Renko' ? <RenkoSeries
-                  yAccessor={(d) => ({ open: d.open, high: d.high, low: d.low, close: d.close })}
-                  // stroke={{up: "#fff", down: "#fff"}}
-                  fillStyle = {ocpClose}
-                  /> : ''}
+              {chartType == 'Renko' ? <RenkoSeries/> : ''}
 
               {/* BAR SERIES */}
               { chartType == 'Bars' ? <BarSeries yAccessor={yEdgeIndicator}
@@ -252,7 +252,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
               />
 
 
-              <ZoomButtons />
+              <ZoomButtons fillOpacity={0}/>
 
               {/* SHOWING DATA OPEN/CLOSE/HIGH/LOW  */}
               <OHLCTooltip

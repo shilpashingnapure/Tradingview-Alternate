@@ -105,3 +105,7 @@
   ::-moz-focus-inner{
     padding: 0;
   }
+
+  .active {
+     color : blue
+  }
