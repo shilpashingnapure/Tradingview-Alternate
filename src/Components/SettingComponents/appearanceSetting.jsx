@@ -4,22 +4,21 @@ import { handleBackgroundColor } from "../../REDUX/action"
 export const ApparenaceSetting = ()=>{
     const {backgroundColorType} = useSelector(state => state)
     const {solid , gradient} = backgroundColorType
-
-    console.log(backgroundColorType)
     const [typeBg , setTypeBg] = useState('solid')
     const dispatch = useDispatch()
+
+    // UPDATING IF BG SOLID
     function handleBackgroundSolid(value){
         dispatch(handleBackgroundColor({...backgroundColorType , backgroundType:'solid' , solid : {color : value}}))
     }
 
+    // UPDATING IF BG IS LIEANER
     function handleBackgroundGradient(key , value){
-
         if(key == 'color1'){
             dispatch(handleBackgroundColor({...backgroundColorType , backgroundType:'linear', gradient : {...gradient , color1 : value}}))
         }else{
             dispatch(handleBackgroundColor({...backgroundColorType , backgroundType:'linear' ,gradient : {...gradient , color2:value}}))
         }
-
     }
 
     return (

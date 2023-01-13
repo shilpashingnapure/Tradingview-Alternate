@@ -3,7 +3,6 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import nextbutton from '../image/nextButton.svg'
 import playbutton from '../image/playButton.svg'
-import resetbutton from '../image/reset.svg'
 export const FunHandleReplay = ({replayNextButton , handlereset , handlePlay , handlePause , play})=>{
 
     const {replay , replayValue} = useSelector((state) => state)
@@ -11,7 +10,7 @@ export const FunHandleReplay = ({replayNextButton , handlereset , handlePlay , h
     const check = replay && replayValue != 0
 
     return <nav className="bottom_nav" style={{borderBottom: '3px solid #e0e3eb'}}>
-        <h1 className='headingReplay'>Double Click from want to Start</h1>
+        <h1 className='headingReplay' style={ check ? { display : 'none'} : {}}>Double Click from want to Start</h1>
         <div className='btns'>
 
         {play ? <button onClick={()=> handlePause()} disabled={check ? false : true}>pause</button> :

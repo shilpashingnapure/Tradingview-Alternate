@@ -7,8 +7,10 @@ export const CandleSetting = ()=>{
     const {colors} = useSelector(state => state)
 
 
-
+    // UPDATING THE VALUE TO REDUX
     function handleColor(k , v){
+
+        // THIS IS CHECKING AND UPDATING THE TICK ON REDUX (T/F)
         if(k == 'checkWick'){
             dispatch(handleColors({...colors , wickCheck:!colors.wickCheck}))
         }else if(k == 'checkFill'){
@@ -19,6 +21,7 @@ export const CandleSetting = ()=>{
             dispatch(handleColors({...colors , lastValueCheck : !colors.lastValueCheck}))
         }
 
+        // UPDATING THE COLOR TO REDUX
         if(k == 'open'){
             dispatch(handleColors({...colors , openFill : v}))
         }else if(k =='close'){
@@ -34,8 +37,6 @@ export const CandleSetting = ()=>{
         }else if(k == 'lastValueColor'){
             dispatch(handleColors({...colors , lastValueColor : v}))
         }
-
-
     }
 
     return (
@@ -53,6 +54,7 @@ export const CandleSetting = ()=>{
                     <input type="color" value={colors.openFill} onChange={(e)=> handleColor('open' , e.target.value)} disabled={!colors.fillCheck}/>
                 </div>
             </div>
+            {/* BORDER COLOR */}
             <div className="colorsSection">
                 <div>
                     <input type="checkbox" onChange={()=> handleColor('checkBorder' , true)} checked={colors.borderCheck}/>
@@ -63,6 +65,7 @@ export const CandleSetting = ()=>{
                     <input type="color" value={colors.openBorder} onChange={(e)=> handleColor('borderOpen' , e.target.value)} disabled={!colors.borderCheck}/>
                 </div>
             </div>
+            {/* WICK COLOR */}
             <div className="colorsSection">
                 <div>
                     <input type="checkbox" onChange={()=> handleColor('checkWick' , true)} checked={colors.wickCheck}/>
@@ -74,6 +77,7 @@ export const CandleSetting = ()=>{
                 </div>
             </div>
             </div>
+            {/* PRICE INDICATOR COLOR */}
             <div>
                 <span className="titleSetting">PRICE LINES</span>
                 <div className="colorsSection">

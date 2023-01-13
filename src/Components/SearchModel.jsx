@@ -25,6 +25,8 @@ export const SearchModel = ()=>{
     const value = useSelector((state)=> state.searchValue)
     const [searchValue , setSearchValue] = useState()
     const dispatch = useDispatch()
+
+    // NAME VALUE FOR SEARCH
     function handleSearch(){
         dispatch(handleSearchValue(searchValue))
         setOpen(false)
