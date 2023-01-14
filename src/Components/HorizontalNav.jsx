@@ -78,7 +78,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
         dispatch(handleReplayCheck(true))
     }
 
-    
+
     return <nav className="hori_navbar">
 
         {/* company section */}
