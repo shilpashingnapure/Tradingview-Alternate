@@ -12,13 +12,7 @@
   height : calc(100vh - 120px);
 }
 
-.headingReplay{
-  position: absolute;
-  top:0;
-  right:40px;
-  z-index:99;
-  font-size: 30px;
-}
+
 
 .btns{
 

@@ -16,7 +16,7 @@ function App() {
   const [initialData , set_data] = useState([])
   const [isLoading , setLoding] = useState(true)
   const [name , setName] = useState()
-  const {searchValue , replay  , replayValue, backgroundColorType} = useSelector((state)=> state)
+  const {searchValue , replay  , replayValue, backgroundColorType , ReplaySpeed} = useSelector((state)=> state)
   const value = replayValue != 0 ? replayValue.idx.index : 0
   const [ nextValue = value , setnext] = useState()
   const [play , setplay] = useState(false)
@@ -124,6 +124,9 @@ function App() {
 
   // handle play of charts
   function handlePlay(){
+    if(play){
+      clearInterval(id.current)
+    }
     setplay(true)
     id.current = setInterval(()=>{
       setnext(prev =>{
@@ -138,7 +141,7 @@ function App() {
           return prev + 1;
         }
       })
-    },500)
+    }, ReplaySpeed)
   }
 
   // handle pause of candle in chart

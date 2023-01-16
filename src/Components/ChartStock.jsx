@@ -3,6 +3,7 @@ import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import { useDispatch, useSelector } from "react-redux"
 import {
+    discontinuousTimeScaleProvider,
     discontinuousTimeScaleProviderBuilder,
     Chart,
     ChartCanvas,
@@ -33,7 +34,9 @@ import {
     heikinAshi,
     Cursor,
     renko,
-    InteractiveYCoordinate
+    InteractiveYCoordinate,
+    kagi,
+    pointAndFigure
 } from "react-financial-charts";
 import { handleReplayValue } from '../REDUX/action';
 
@@ -47,12 +50,33 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
     const dispatch = useDispatch()
     const calculateRenko = renko()
 
+    const calculateKagi = kagi()
+
+    const calculateHeikinAshi = heikinAshi()
+
+    const pAndf = pointAndFigure()
+
     const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
 
     var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(initialData)
     if(chartType == 'Renko'){
       var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(calculateRenko(initialData))
     }
+    if(chartType == 'HeikinAshi'){
+      var {data , xScale , xAccessor , displayXAccessor} = ScaleProvider(calculateHeikinAshi(initialData))
+    }
+
+    if(chartType == 'Kagi'){
+      var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(calculateKagi(initialData))
+
+    }
+    if(chartType == 'PointAndFigure'){
+      var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(pAndf(initialData))
+    }
+
+
+
+
 
     const margin = { left: 25, right: 55, top: 15, bottom: 25};
     const pricesDisplayFormat = format(".2f");
@@ -169,6 +193,9 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
                 stroke={colors.borderCheck ? openCloseBorderColor : (d) => (d.close > d.open ? "rgba(0,0,0,0)" : "rgba(0,0,0,0)")} />
                 : ''}
 
+
+              {/* heikinAshi chart */}
+              {chartType == 'HeikinAshi' ? <CandlestickSeries />:''}
               {/* LINE SERIES CHART */}
               {chartType === 'Line' ? <LineSeries
                 connectNulls={false}
@@ -186,8 +213,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
               {chartType === 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
 
               {/* KAGI CHART */}
-              {chartType === 'Kagi' ? <KagiSeries yAccessor={(d) => ({ open: d.open, high: d.high, low: d.low, close: d.close })}
-              stroke={openCloseColor}/>:''}
+              {chartType === 'Kagi' ? <KagiSeries />:''}
 
               {/* BASE LINE CHART */}
               {chartType == 'Base Line' ? <AlternatingFillAreaSeries yAccessor={yEdgeIndicator}
@@ -209,7 +235,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
               />:''}
 
               {/* PointAndFigureSeries CHART */}
-              {/* { chartType == 'PointAndFigure' ? <PointAndFigureSeries /> : ''} */}
+              { chartType == 'PointAndFigure' ? <PointAndFigureSeries /> : ''}
 
               {/* <VolumeProfileSeries /> */}
 

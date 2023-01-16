@@ -61,7 +61,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
 
     const charts = [['bar.svg','Bars'],['candle.svg','Candles'],
             ['line.svg','Line'],['area.svg','Area'],['kagi.svg','Kagi'],
-            ['kagi.svg' , 'Base Line'] , ['kagi.svg' , 'OHLC'] , ['kagi.svg' , 'Renko'] ,
+            ['kagi.svg' , 'Base Line'] , ['candle.svg','HeikinAshi'] ,['kagi.svg' , 'OHLC'] , ['kagi.svg' , 'Renko'] ,
             ['kagi.svg' , 'PointAndFigure']]
 
     const {replay} = useSelector(state => state)

@@ -1,6 +1,7 @@
-import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE, REPLAYVALUE , DATA} from './action'
+import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE, REPLAYVALUE , DATA, REPLAYSPEED} from './action'
 
 const initital = {
+    ReplaySpeed : 500 ,
     data : [],
     chartType : 'Candles',
     searchValue:'ACC',
@@ -48,6 +49,8 @@ export const reducer = (state = initital , {type , payload})=>{
             return {...state , backgroundColorType : payload}
         case REPLAYVALUE:
             return {...state , replayValue : payload}
+        case REPLAYSPEED:
+            return {...state , ReplaySpeed : payload}
         default:
             return state
     }
