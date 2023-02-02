@@ -1,4 +1,4 @@
-import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE, REPLAYVALUE , DATA, REPLAYSPEED} from './action'
+import {ADD , SEARCH , REPLAY , COLORS , BACKGROUNDCHANGE, REPLAYVALUE , DATA, REPLAYSPEED , TIMEFRAMEINPUT , TOOL, UNDO_REDO} from './action'
 
 const initital = {
     ReplaySpeed : 500 ,
@@ -7,6 +7,7 @@ const initital = {
     searchValue:'ACC',
     replay:false,
     replayValue : 0,
+    timeFrameInput : false ,
     colors :{
         openFill : "#26a69a",
         closeFill:"#ef5350",
@@ -51,6 +52,12 @@ export const reducer = (state = initital , {type , payload})=>{
             return {...state , replayValue : payload}
         case REPLAYSPEED:
             return {...state , ReplaySpeed : payload}
+        case TIMEFRAMEINPUT:
+            return {...state , timeFrameInput : payload}
+        case TOOL:
+            return {...state , tool:payload}
+        case UNDO_REDO:
+            return payload
         default:
             return state
     }

@@ -256,3 +256,33 @@ ul.replayDropDown{
     padding:.5rem 1rem;
     width: 5%;
 }
+
+/* custom time input frame */
+.customFrameInputContainer{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50% , -50%);
+    z-index:999;
+    box-shadow: 0 2px 4px #0003;
+    background-color: #fff;
+    padding:1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:.5rem;
+    border-radius: 6px;
+    width: 20%;
+}
+.customFrameInputContainer input{
+    border:1px solid #d1d4dc;
+    padding:1rem;
+    font-size: 1.5rem;
+    width: 100%;
+    border-radius: 6px;
+}
+.customFrameInputContainer input:focus{
+    outline: none;
+}
+

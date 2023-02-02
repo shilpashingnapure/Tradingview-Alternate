@@ -13,6 +13,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "candlestick-convert": "^2.1.2",
+    "draw-on-canvas": "^1.2.0",
     "node": "^16.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -20,6 +21,7 @@
     "react-redux": "^8.0.5",
     "react-scripts": "^2.0.0",
     "redux": "^4.2.0",
+    "roughjs": "^4.5.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

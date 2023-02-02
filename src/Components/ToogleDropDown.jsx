@@ -5,11 +5,12 @@ import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import { Divider, IconButton } from '@mui/material';
 import './navbar.css'
 import { useDispatch } from 'react-redux';
-import { handleChartType } from '../REDUX/action';
+import { handleChartType, handleTimeFrameInput } from '../REDUX/action';
+import { useState } from 'react';
 
 
 
-export const SubMenu = ({list , type , handleTimeFrameConvertion}) => {
+export const SubMenu = ({list , type , handleTimeFrameConvertion , setopenTimeInput , handleActive}) => {
 
   const dispatch = useDispatch()
 
@@ -26,6 +27,10 @@ export const SubMenu = ({list , type , handleTimeFrameConvertion}) => {
   // HANDLE THE CHART TYPE
   function handleChart(value){
     dispatch(handleChartType(value))
+  }
+
+  function handleInputFrame(){
+    dispatch(handleTimeFrameInput(true))
   }
 
 
@@ -53,7 +58,7 @@ export const SubMenu = ({list , type , handleTimeFrameConvertion}) => {
       >
         {/* SHOW CHART LIST */}
         {type==='chart' ? list.map(([img , name] , index)=>{
-          return <MenuItem onClick={handleClose} key={index}>
+          return <MenuItem onClick={handleClose} key={index} >
                   <div className='flex' style={{alignItems:'center'}} onClick={()=>handleChart(name)}>
                     <img alt='icon' src={require('../image/' + img)} className='svg_size'/>
                     <span>{name}</span>
@@ -65,7 +70,7 @@ export const SubMenu = ({list , type , handleTimeFrameConvertion}) => {
             {list.min.map((item , index)=>{
               return <MenuItem
                     key={index}
-                    onClick={()=>{handleClose();handleTimeFrameConvertion('min' , item)}}
+                    onClick={()=>{handleClose();handleTimeFrameConvertion('min' , item);handleActive('m',item)}}
                     >
                       {item} minutes
                     </MenuItem>
@@ -79,7 +84,13 @@ export const SubMenu = ({list , type , handleTimeFrameConvertion}) => {
                         {item} Hours
                     </MenuItem>
             })}
+            <MenuItem onClick={()=> {handleClose(); handleInputFrame()}}>
+                Custom Time
+            </MenuItem>
+
+
         </div>
+
         }
       </Menu>
     </div>

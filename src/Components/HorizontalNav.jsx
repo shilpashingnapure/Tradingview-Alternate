@@ -22,6 +22,8 @@ import { SearchModel } from './SearchModel'
 import { Box } from "@mui/system"
 import { ChartSetting } from './ChartSetting';
 import convert from 'candlestick-convert';
+import { CustomTimeFrame } from './customTimeFrame';
+
 
 
 const style = {
@@ -39,6 +41,7 @@ const style = {
 
 
 export const HorizontalNav = ({handleTimeFrame })=>{
+
 
     const Data = useSelector((state)=> state.data)
     function handleTimeFrameConvertion(type , newFrame){
@@ -64,7 +67,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
             ['kagi.svg' , 'Base Line'] , ['candle.svg','HeikinAshi'] ,['kagi.svg' , 'OHLC'] , ['kagi.svg' , 'Renko'] ,
             ['kagi.svg' , 'PointAndFigure']]
 
-    const {replay} = useSelector(state => state)
+    const {replay , timeFrameInput} = useSelector(state => state)
 
 
 
@@ -77,8 +80,31 @@ export const HorizontalNav = ({handleTimeFrame })=>{
     function handleReplay(){
         dispatch(handleReplayCheck(true))
     }
+    const [activeName , setactiveName] = useState(null)
+    function handleActive(name , item){
+        setActive(item+name)
+        if(![1,5,15].includes(item)){
+            setactiveName(item+name)
+        }
+
+    }
+
+    // function undo(){
+    //     let undoList = history
+    //     if(undoList.length > 0){
+    //     undoList.pop()
+    //     }
+
+    //     set_history(undoList)
+    // }
+    // function redo(){
+    //     let redoList = history
+    //     redoList.push(undo_history[undo_history.length-1])
+    //     set_history(redoList)
+    // }
 
 
+    const [active , setActive] = useState(null)
     return <nav className="hori_navbar">
 
         {/* company section */}
@@ -96,16 +122,18 @@ export const HorizontalNav = ({handleTimeFrame })=>{
 
         {/* time data section */}
         <ul>
-            <li onClick={()=>handleTimeFrameConvertion('min',1)}>1m</li>
-            <li onClick={()=> handleTimeFrameConvertion('min',5)}>5m</li>
-            <li onClick={()=> handleTimeFrameConvertion('min',15)}>15m</li>
-            <li onClick={()=> handleTimeFrameConvertion('hour',1)}>1h</li>
-            <li onClick={()=> handleTimeFrameConvertion('day' , 1)}>D</li>
+            <li onClick={()=> { setActive('1m');handleTimeFrameConvertion('min',1)}} className={active == '1m' ? 'active': ''}>1m</li>
+            <li onClick={()=> { setActive('5m');handleTimeFrameConvertion('min',5)}} className={active == '5m' ? 'active': ''}>5m</li>
+            <li onClick={()=> { setActive('15m');handleTimeFrameConvertion('min',15)}} className={active == '15m' ? 'active': ''}>15m</li>
+            <li onClick={()=> { setActive('1H');handleTimeFrameConvertion('hour',1)}} className={active == '1H' ? 'active': ''}>1h</li>
+            <li onClick={()=> { setActive('1D');handleTimeFrameConvertion('day' , 1)}} className={active == '1D' ? 'active': ''}>D</li>
             <li onClick={()=> handleTimeFrameConvertion('week' , 1)}>W</li>
+            {activeName != null ? <li className={active == activeName ? 'active': ''}>{activeName}</li> : ''}
             {/* <li onClick={()=> handleTimeFrameConvertion('month' , 1)}>M</li> */}
             <li style={{marginLeft:'-5px',marginTop:'2px'}}>
-                <SubMenu list={{min : [1,3,5,15,30,45] , hour : [1,2,3,4]}} handleTimeFrameConvertion={handleTimeFrameConvertion}/>
+                <SubMenu list={{min : [1,3,5,15,30,45] , hour : [1,2,3,4]}} handleActive={handleActive} handleTimeFrameConvertion={handleTimeFrameConvertion}/>
             </li>
+            {timeFrameInput ?<CustomTimeFrame handleActive={handleActive} handleTimeFrameConvertion={handleTimeFrameConvertion} />:''}
         </ul>
         {/* Chart section */}
         <ul className='hori_navbar--chartSection'>
@@ -147,7 +175,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
 
         {/* undo-redo */}
         <ul style={{border:'none'}}>
-            <li>
+            <li >
                 <ShortcutOutlinedIcon style={{transform:'scaleX(-1)'}} fontSize='small'/>
             </li>
             <li>

@@ -1,15 +1,8 @@
-import React, { useState } from 'react'
-import { format } from "d3-format";
-import { timeFormat } from "d3-time-format";
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import {
-    discontinuousTimeScaleProvider,
-    discontinuousTimeScaleProviderBuilder,
     Chart,
     ChartCanvas,
-    CandlestickSeries,
-    LineSeries,
-    OHLCTooltip,
     XAxis,
     YAxis,
     CrossHairCursor,
@@ -20,151 +13,105 @@ import {
     withDeviceRatio,
     withSize,
     LabelAnnotation,
-    AreaSeries,
-    KagiSeries,
-    HoverTooltip,
     ClickCallback,
-    SingleValueTooltip,
-    AlternatingFillAreaSeries,
-    OHLCSeries,
-    RenkoSeries,
-    BarSeries,
-    PointAndFigureSeries,
     lastVisibleItemBasedZoomAnchor,
-    heikinAshi,
     Cursor,
-    renko,
-    InteractiveYCoordinate,
-    kagi,
-    pointAndFigure
+
 } from "react-financial-charts";
-import { handleReplayValue } from '../REDUX/action';
+import { handleReplayValue, handleTool, handleUndoRedo } from '../REDUX/action';
+import { AllTypeCharts } from './allTypeCharts';
+import { Tooltips } from './ToolTips';
+import { calculateData } from './chartData';
+import { TrendLines  , drawsLine} from './TrendLine';
 
 
 
 const ChartStock = ({name , initialData , height , width , ratio})=>{
 
-    // REDUX TO FIND OUT WHICH TYPE OF CHART WANT
-    const {chartType , colors , replayValue , replay} = useSelector(state => state)
+  const [showGrid , setGrid] = useState(false)
+  const {data , xScale , xAccessor , displayXAccessor, margin , openCloseColor , yEdgeIndicator , yExtents ,xExtents,timeDisplayFormat , dateTimeFormat ,pricesDisplayFormat} = calculateData(initialData)
 
-    const dispatch = useDispatch()
-    const calculateRenko = renko()
-
-    const calculateKagi = kagi()
-
-    const calculateHeikinAshi = heikinAshi()
-
-    const pAndf = pointAndFigure()
-
-    const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
-
-    var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(initialData)
-    if(chartType == 'Renko'){
-      var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(calculateRenko(initialData))
-    }
-    if(chartType == 'HeikinAshi'){
-      var {data , xScale , xAccessor , displayXAccessor} = ScaleProvider(calculateHeikinAshi(initialData))
-    }
-
-    if(chartType == 'Kagi'){
-      var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(calculateKagi(initialData))
-
-    }
-    if(chartType == 'PointAndFigure'){
-      var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(pAndf(initialData))
-    }
+  const {colors , replayValue , replay , tool , chartType,backgroundColorType} = useSelector(state => state)
+  const dispatch = useDispatch()
 
 
-
-
-
-    const margin = { left: 25, right: 55, top: 15, bottom: 25};
-    const pricesDisplayFormat = format(".2f");
-    const max = xAccessor(data[data.length-1])
-    const min = xAccessor(data[Math.max(0 , data.length-100)])
-
-    const base = data[Math.floor(data.length / 2)].close
-    const xExtents = [min , max]
-
-    // SHOW THE PRICE AND TIME FORMAT ON CHART
-    const dateTimeFormat = "%a %d %b %Y %H:%M";
-    const timeDisplayFormat = timeFormat(dateTimeFormat);
-    const [showGrid , setGrid] = useState(false)
-
-
-  // DATA
-  const yExtents = (data) => {
-    return [data.low, data.high];
-  };
-
-  const yEdgeIndicator = (data) => {
-    return data.close
-  };
-
-  // CANDLE COLOR
-  const openCloseColor = (data) => {
-    return data.close < data.open ? colors.closeFill : colors.openFill;
-  };
-
-
-
-  // WICK COLOR
-  const openCloseWickColor = (data)=>{
-    return data.close < data.open ? colors.closeWick : colors.openWick
-  }
-
-  // BORDER COLOR
-  const openCloseBorderColor = (data)=>{
-    return data.close < data.open ? colors.closeBorder : colors.openBorder
-  }
-
-  // THIS VARIABLE USE FOR ACCESSING THE CURRUENT ITEM DATA FROM CHART
+  // ON USER DOUBLE CLICK ADD CURRENT ITEM DATA TO REDUX
   var currItem;
-
-
-  //HANDLE THE HOVER TOOLTIP
-  const Content = (data)=>{
-    const {currentItem} = data
-    return {
-      x : currentItem.date ,
-      y:[{
-        label : 'Open',
-        value : currentItem.open.toString(),
-        // stroke:"#ED561B"
-      },{
-        label : 'Close',
-        value : currentItem.close.toString(),
-        // stroke:'#ED561B'
-      },{
-        label : 'Low',
-        value : currentItem.low.toString()
-      },{
-        label : 'High',
-        value : currentItem.high.toString()
-      }
-    ]
-    }
-  }
-
-
-
   // SINGLE VALUE TOOL
   const singleValueToolTip = (_, data) => {
     currItem = data.currentItem
     return data.currentItem
   }
 
-  // ON USER DOUBLE CLICK ADD CURRENT ITEM DATA TO REDUX
   const handle = ()=>{
     dispatch(handleReplayValue(currItem))
   }
 
+  const canvasRef = useRef(null)
+  const contextRef = useRef(null)
+  const [elements , setelements] = useState([])
+
+  const [history , set_history] = useState([])
+  const [index , setIndex] = useState(-1)
+
+  const state = useSelector((state)=> state)
+
+  function saveCanvas(){
+
+    let check = history.filter((item) => item.id == index + 1)
+    if(check.length == 0){
+      set_history([...history , {id : index+1 , values : state}])
+    }else{
+      let Copyhistory = [...history]
+    }
+    console.log('present' , check)
+
+
+
+    setIndex(prev => prev + 1)
+  }
+
+  function undo(){
+    setIndex(prev => prev - 1)
+    restore(index-1)
+  }
+
+  function redo(){
+    setIndex(prev => prev + 1)
+
+    restore(index)
+
+  }
+
+
+
+  useLayoutEffect(()=>{
+    const canvas = canvasRef.current.canvasContainerRef.current.bgRef.current
+    canvas.style.zIndex ='9999999'
+    const context = canvas.getContext('2d')
+    contextRef.current = context
+    elements.forEach((element) => drawsLine(contextRef , element))
+
+  })
+
+  useEffect(()=>{
+    saveCanvas()
+
+
+  } , [state])
+
+
+  function restore(index){
+    let restore_canvas = history[index]
+    dispatch(handleUndoRedo(restore_canvas.values))
+  }
 
 
   return (
     <div>
 
-        {/* <button onClick={()=> setGrid(!showGrid)}>show Grid</button>*/}
+        {/* <button onClick={undo} disabled={index <= 0 ? true:false}>undo</button> */}
+        {/* <button onClick={redo} disabled={index >= history.length? true:false}>redo</button> */}
         <ChartCanvas
             height={height}
             ratio={ratio}
@@ -176,68 +123,22 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
             xScale={xScale}
             xAccessor={xAccessor}
             xExtents={xExtents}
-            // padding = { { left:0, right: 200} }
+            ref={canvasRef}
+            disablePan={true}
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
+
           >
 
             {/*ChartS*/}
+
+
             <Chart id={1}  yExtents={yExtents} padding={15} >
               <XAxis showGridLines={showGrid} showTickLabel={true} showDomain={false}/>
-              <YAxis showGridLines={showGrid}  showDomain={false} showTicks={false}/>
+              <YAxis showGridLines={showGrid}  showDomain={false} showTicks={false} />
 
+              {/* all types of charts */}
+              <AllTypeCharts data={data}/>
 
-              {/* CANDLE STICK CHART */}
-              {chartType === 'Candles' ? <CandlestickSeries
-                fill={openCloseColor}
-                wickStroke={colors.wickCheck ? openCloseWickColor : (d) => (d.close > d.open ? "rgba(0,0,0,0)" : "rgba(0,0,0,0)")}
-                stroke={colors.borderCheck ? openCloseBorderColor : (d) => (d.close > d.open ? "rgba(0,0,0,0)" : "rgba(0,0,0,0)")} />
-                : ''}
-
-
-              {/* heikinAshi chart */}
-              {chartType == 'HeikinAshi' ? <CandlestickSeries />:''}
-              {/* LINE SERIES CHART */}
-              {chartType === 'Line' ? <LineSeries
-                connectNulls={false}
-                defined={(d) => d !== undefined && !isNaN(d)}
-                hoverStrokeWidth={4}
-                hoverTolerance={6}
-                highlightOnHover={true}
-                strokeDasharray={"Solid"}
-                strokeStyle={"#2196f3"}
-                strokeWidth={1}
-                yAccessor={yEdgeIndicator}/>
-              : ''}
-
-              {/* AREA CHART */}
-              {chartType === 'Area' ? <AreaSeries yAccessor={yEdgeIndicator}/> : ''}
-
-              {/* KAGI CHART */}
-              {chartType === 'Kagi' ? <KagiSeries />:''}
-
-              {/* BASE LINE CHART */}
-              {chartType == 'Base Line' ? <AlternatingFillAreaSeries yAccessor={yEdgeIndicator}
-                                            baseAt={base}
-                                            fillStyle={openCloseColor}
-                                          />  : '' }
-
-              {/* OHLCSeries CHART */}
-              {chartType == 'OHLC' ? <OHLCSeries
-                yAccessor={(d) => ({ open: d.open, high: d.high, low: d.low, close: d.close })}
-                stroke={openCloseColor}/> : ''}
-
-              {/* Renko Series Chart */}
-              {chartType == 'Renko' ? <RenkoSeries/> : ''}
-
-              {/* BAR SERIES */}
-              { chartType == 'Bars' ? <BarSeries yAccessor={yEdgeIndicator}
-                fillStyle={openCloseColor}
-              />:''}
-
-              {/* PointAndFigureSeries CHART */}
-              { chartType == 'PointAndFigure' ? <PointAndFigureSeries /> : ''}
-
-              {/* <VolumeProfileSeries /> */}
 
 
               {/* MOUSSE COORDINATES */}
@@ -250,7 +151,13 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
                 displayFormat={timeDisplayFormat}/>
 
               {/* FOR DOUBLECLICK */}
-              <ClickCallback onDoubleClick={handle}/>
+              <ClickCallback
+              onDoubleClick={handle}
+              />
+
+              {/* Tools */}
+              {tool == 'trendline' ? <TrendLines contextRef={contextRef} elements={elements} setelements={setelements}/>:''}
+
 
 
 
@@ -278,26 +185,14 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
               />
 
 
-              <ZoomButtons fillOpacity={0}/>
+              <ZoomButtons fillOpacity={.5} />
 
-              {/* SHOWING DATA OPEN/CLOSE/HIGH/LOW  */}
-              <OHLCTooltip
-                origin={[400, 10]}
-                fontSize={13}
-                fontWeight={600}
-              />
+              <Tooltips singleValueToolTip={singleValueToolTip} yEdgeIndicator={yEdgeIndicator}/>
 
-              {/* <HoverTooltip
-                tooltip={{content : Content}}
-                yAccessor={yEdgeIndicator}
-              /> */}
 
-              <SingleValueTooltip
-                yLabel={'Price'}
-                yAccessor={yEdgeIndicator}
-                displayValuesFor={singleValueToolTip}
-              />
             </Chart>
+
+
 
             {/* CURSOR CHANGING (ON REPLAY MODE SHOW ONLY X CURSOR )*/}
             {replay && replayValue == 0 ?  <Cursor disableYCursor={true}/>:  <CrossHairCursor />}
