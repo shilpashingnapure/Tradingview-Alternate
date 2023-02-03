@@ -24,6 +24,7 @@ import {
     kagi,
     pointAndFigure,
     stochasticOscillator,
+    change,
 
 } from "react-financial-charts";
 export function calculateData(initialData){
@@ -38,10 +39,11 @@ export function calculateData(initialData){
 
     const SlowSTO = stochasticOscillator().options({ windowSize: 14, kWindowSize: 3, dWindowSize: 4 }).accessor(d => d.slowSTO)
 
+    const changeCalculator = change()
 
     const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date))
 
-    var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(SlowSTO(initialData))
+    var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(changeCalculator(initialData))
     if(chartType == 'Renko'){
       var {data , xScale , xAccessor , displayXAccessor } = ScaleProvider(calculateRenko(initialData))
     }
@@ -72,7 +74,7 @@ export function calculateData(initialData){
     // SHOW THE PRICE AND TIME FORMAT ON CHART
     const dateTimeFormat = "%a %d %b %Y %H:%M";
     const timeDisplayFormat = timeFormat(dateTimeFormat);
-    
+
 
 
   // DATA

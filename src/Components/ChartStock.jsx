@@ -16,6 +16,7 @@ import {
     ClickCallback,
     lastVisibleItemBasedZoomAnchor,
     Cursor,
+    VolumeProfileSeries,
 
 } from "react-financial-charts";
 import { handleReplayValue, handleTool, handleUndoRedo } from '../REDUX/action';
@@ -106,6 +107,7 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
     dispatch(handleUndoRedo(restore_canvas.values))
   }
 
+  console.log(data)
 
   return (
     <div>
@@ -188,6 +190,8 @@ const ChartStock = ({name , initialData , height , width , ratio})=>{
               <ZoomButtons fillOpacity={.5} />
 
               <Tooltips singleValueToolTip={singleValueToolTip} yEdgeIndicator={yEdgeIndicator}/>
+
+              <VolumeProfileSeries/>
 
 
             </Chart>

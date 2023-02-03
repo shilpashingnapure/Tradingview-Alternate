@@ -67,6 +67,8 @@ export const HorizontalNav = ({handleTimeFrame })=>{
             ['kagi.svg' , 'Base Line'] , ['candle.svg','HeikinAshi'] ,['kagi.svg' , 'OHLC'] , ['kagi.svg' , 'Renko'] ,
             ['kagi.svg' , 'PointAndFigure']]
 
+    const indicators = ['volume Profile' , 'Stochastic Oscillator' , 'ATR']
+
     const {replay , timeFrameInput} = useSelector(state => state)
 
 
@@ -89,19 +91,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
 
     }
 
-    // function undo(){
-    //     let undoList = history
-    //     if(undoList.length > 0){
-    //     undoList.pop()
-    //     }
 
-    //     set_history(undoList)
-    // }
-    // function redo(){
-    //     let redoList = history
-    //     redoList.push(undo_history[undo_history.length-1])
-    //     set_history(redoList)
-    // }
 
 
     const [active , setActive] = useState(null)
@@ -131,7 +121,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
             {activeName != null ? <li className={active == activeName ? 'active': ''}>{activeName}</li> : ''}
             {/* <li onClick={()=> handleTimeFrameConvertion('month' , 1)}>M</li> */}
             <li style={{marginLeft:'-5px',marginTop:'2px'}}>
-                <SubMenu list={{min : [1,3,5,15,30,45] , hour : [1,2,3,4]}} handleActive={handleActive} handleTimeFrameConvertion={handleTimeFrameConvertion}/>
+                <SubMenu type='timeframe' list={{min : [1,3,5,15,30,45] , hour : [1,2,3,4]}} handleActive={handleActive} handleTimeFrameConvertion={handleTimeFrameConvertion}/>
             </li>
             {timeFrameInput ?<CustomTimeFrame handleActive={handleActive} handleTimeFrameConvertion={handleTimeFrameConvertion} />:''}
         </ul>
@@ -153,7 +143,7 @@ export const HorizontalNav = ({handleTimeFrame })=>{
             <li className='flex'>
                 <TimelineOutlinedIcon fontSize="small"/>
                 <span>Indicators</span>
-                <ExpandMoreOutlinedIcon fontSize="small"/>
+                <SubMenu list={indicators} type='indicator'/>
             </li>
             <li>
                 <GridViewOutlinedIcon fontSize='small'/>

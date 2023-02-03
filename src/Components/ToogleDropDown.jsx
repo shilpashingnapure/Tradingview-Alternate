@@ -64,7 +64,8 @@ export const SubMenu = ({list , type , handleTimeFrameConvertion , setopenTimeIn
                     <span>{name}</span>
                   </div>
                 </MenuItem>
-          }) :
+          }) :''}
+          {type=='timeframe' ?
           <div>
             {/* SHOW TIME FRAME LIST */}
             {list.min.map((item , index)=>{
@@ -90,8 +91,14 @@ export const SubMenu = ({list , type , handleTimeFrameConvertion , setopenTimeIn
 
 
         </div>
-
-        }
+        :''}
+        {type=='indicator' ? list.map((item , index)=>{
+          return <MenuItem onClick={handleClose} key={index} >
+                  <div className='flex' style={{alignItems:'center'}} >
+                    <span>{item}</span>
+                  </div>
+                </MenuItem>
+          }):''}
       </Menu>
     </div>
   );
