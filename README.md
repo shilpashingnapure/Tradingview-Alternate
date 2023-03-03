@@ -29,6 +29,10 @@ Live demo for this project can be found in this [link](https://demo-deploying-ch
 - GitHub: [@shilpashingnapure](https://github.com/shilpashingnapure)
 - LinkedIn: [@shilpa-shingnapure](https://www.linkedin.com/in/shilpa-shingnapure)
 
+##running project on your system
+1. npm i or npm i --legecy-peer-deps
+2. npm start
+
 ## Contributing
 Fork the Project \
 Open a Pull Request \
